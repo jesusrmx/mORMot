@@ -5027,37 +5027,37 @@ end;
 
 {$ifdef FPC} // we supply our own static zlib files in coff format for Windows
   {$ifdef WIN32}
-    {$LINK static\i386-win32\deflate.o}
-    {$LINK static\i386-win32\trees.o}
-    {$LINK static\i386-win32\zutil.o}
-    {$LINK static\i386-win32\inffast.o}
-    {$LINK static\i386-win32\inflate.o}
-    {$LINK static\i386-win32\inftrees.o}
-    {$LINK static\i386-win32\adler32.o}
-    {$LINK static\i386-win32\crc32.o}
-    {$linklib static\i386-win32\libmsvcrt.a}
+    {$LINK mormot_deflate.o}
+    {$LINK mormot_trees.o}
+    {$LINK mormot_zutil.o}
+    {$LINK mormot_inffast.o}
+    {$LINK mormot_inflate.o}
+    {$LINK mormot_inftrees.o}
+    {$LINK mormot_adler32.o}
+    {$LINK mormot_crc32.o}
+    {$linklib libmsvcrt.a}
   {$endif}
   {$ifdef WIN64}
     {$ifdef USEZLIBSSE}
-    {$L static\x86_64-win64\sse\inffast.o}
-    {$L static\x86_64-win64\sse\inftrees.o}
-    {$L static\x86_64-win64\sse\inflate.o}
-    {$L static\x86_64-win64\sse\deflate.o}
-    {$L static\x86_64-win64\sse\trees.o}
-    {$L static\x86_64-win64\sse\adler32.o}
-    {$L static\x86_64-win64\sse\crc32.o}
-    {$L static\x86_64-win64\sse\zutil.o}
+    {$L mormot_sse_inffast.o}
+    {$L mormot_sse_inftrees.o}
+    {$L mormot_sse_inflate.o}
+    {$L mormot_sse_deflate.o}
+    {$L mormot_sse_trees.o}
+    {$L mormot_sse_adler32.o}
+    {$L mormot_sse_crc32.o}
+    {$L mormot_sse_zutil.o}
     {$else USEZLIBSSE}
-    {$L static\x86_64-win64\inffast.o}
-    {$L static\x86_64-win64\inftrees.o}
-    {$L static\x86_64-win64\inflate.o}
-    {$L static\x86_64-win64\deflate.o}
-    {$L static\x86_64-win64\trees.o}
-    {$L static\x86_64-win64\adler32.o}
-    {$L static\x86_64-win64\crc32.o}
-    {$L static\x86_64-win64\zutil.o}
+    {$L mormot_inffast.o}
+    {$L mormot_inftrees.o}
+    {$L mormot_inflate.o}
+    {$L mormot_deflate.o}
+    {$L mormot_trees.o}
+    {$L mormot_adler32.o}
+    {$L mormot_crc32.o}
+    {$L mormot_zutil.o}
     {$endif USEZLIBSSE}
-    {$linklib static\x86_64-win64\libmsvcrt.a}
+    {$linklib libmsvcrt.a}
   {$endif}
 
 function deflate(var strm: TZStream; flush: integer): integer; cdecl; external;

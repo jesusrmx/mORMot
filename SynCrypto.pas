@@ -7712,7 +7712,7 @@ end;
 {$ifdef SHA512_X86} // optimized asm using SSE3 instructions for x86 32-bit
 {$ifdef FPC}
   {$ifdef MSWINDOWS}
-    {$L static\i386-win32\sha512-x86.o}
+    {$L mormot_sha512-x86.o}
   {$else}
     {$L static/i386-linux/sha512-x86.o}
   {$endif}

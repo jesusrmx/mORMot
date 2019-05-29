@@ -1861,23 +1861,23 @@ end;
   {$ifdef FPC}
     {$ifdef MSWINDOWS}
       {$ifdef ECC_O1}
-        {$L static\i386-win32\eccwin32O1.o}
+        {$L mormot_eccwin32O1.o}
       {$endif}
       {$ifdef ECC_O2}
-        {$L static\i386-win32\eccwin32O2.o}
+        {$L mormot_eccwin32O2.o}
       {$endif}
       {$ifdef ECC_O3}
-        {$L static\i386-win32\eccwin32O3.o}
+        {$L mormot_eccwin32O3.o}
       {$endif}
     {$else}
       {$ifdef ECC_O1}
-        {$L static/i386-linux/ecclin32O1.o}
+        {$L mormot_ecclin32O1.o}
       {$endif}
       {$ifdef ECC_O2}
-        {$L static/i386-linux/ecclin32O2.o}
+        {$L mormot_ecclin32O2.o}
       {$endif}
       {$ifdef ECC_O3}
-        {$L static/i386-linux/ecclin32O3.o}
+        {$L mormot_ecclin32O3.o}
       {$endif}
     {$endif MSWINDOWS}
   {$else}
@@ -1895,25 +1895,37 @@ end;
 
 {$ifdef CPUX64}
   {$ifdef MSWINDOWS} // same .o format under Win64 for Delphi and FPC :)
-  {$ifdef ECC_O1}
-    {$L SynEcc64O1.o}
-  {$endif}
-  {$ifdef ECC_O2}
-    {$L SynEcc64O2.o}
-  {$endif}
-  {$ifdef ECC_O3}
-    {$L SynEcc64O3.o}
-  {$endif}
-  {$else}
   {$ifdef FPC}
     {$ifdef ECC_O1}
-      {$L static/x86_64-linux/ecclin64O1.o}
+    	{$L mormot_SynEcc64O1.o}
     {$endif}
     {$ifdef ECC_O2}
-      {$L static/x86_64-linux/ecclin64O2.o}
+    	{$L mormot_SynEcc64O2.o}
     {$endif}
     {$ifdef ECC_O3}
-      {$L static/x86_64-linux/ecclin64O3.o}
+	  {$L mormot_SynEcc64O3.o}
+    {$endif}
+  {$else FPC}
+    {$ifdef ECC_O1}
+      {$L SynEcc64O1.o}
+    {$endif}
+    {$ifdef ECC_O2}
+      {$L SynEcc64O2.o}
+    {$endif}
+    {$ifdef ECC_O3}
+      {$L SynEcc64O3.o}
+    {$endif}
+  {$endif FPC}
+  {$else MSWINDOWS}
+  {$ifdef FPC}
+    {$ifdef ECC_O1}
+      {$L mormot_ecclin64O1.o}
+    {$endif}
+    {$ifdef ECC_O2}
+      {$L mormot_ecclin64O2.o}
+    {$endif}
+    {$ifdef ECC_O3}
+      {$L mormot_ecclin64O3.o}
     {$endif}
   {$endif FPC}
   {$endif MSWINDOWS}

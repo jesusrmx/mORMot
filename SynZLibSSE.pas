@@ -170,27 +170,27 @@ end;
 {$ifdef FPC}
 
 {$ifdef WIN32}
-  {.$linklib static\i386-win32\libkernel32.a}
-  {.$linklib static\i386-win32\libgcc.a}
-  {$L static\i386-win32\trees.o}
-  {$L static\i386-win32\adler32.o}
-  {$L static\i386-win32\crc32.o}
-  {$L static\i386-win32\deflate.o}
-  {$L static\i386-win32\zutil.o}
-  {$L static\i386-win32\inffast.o}
-  {$L static\i386-win32\inftrees.o}
-  {$L static\i386-win32\inflate.o}
+  {.$linklib libkernel32.a}
+  {.$linklib libgcc.a}
+  {$L mormot_trees.o}
+  {$L mormot_adler32.o}
+  {$L mormot_crc32.o}
+  {$L mormot_deflate.o}
+  {$L mormot_zutil.o}
+  {$L mormot_inffast.o}
+  {$L mormot_inftrees.o}
+  {$L mormot_inflate.o}
 {$endif}
 
 {$ifdef WIN64}
-  {$L static\x86_64-win64\sse\trees.o}
-  {$L static\x86_64-win64\sse\adler32.o}
-  {$L static\x86_64-win64\sse\crc32.o}
-  {$L static\x86_64-win64\sse\deflate.o}
-  {$L static\x86_64-win64\sse\zutil.o}
-  {$L static\x86_64-win64\sse\inffast.o}
-  {$L static\x86_64-win64\sse\inftrees.o}
-  {$L static\x86_64-win64\sse\inflate.o}
+  {$L mormot_sse_trees.o}
+  {$L mormot_sse_adler32.o}
+  {$L mormot_sse_crc32.o}
+  {$L mormot_sse_deflate.o}
+  {$L mormot_sse_zutil.o}
+  {$L mormot_sse_inffast.o}
+  {$L mormot_sse_inftrees.o}
+  {$L mormot_sse_inflate.o}
 {$endif}
 
 {$endif FPC}

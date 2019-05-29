@@ -210,17 +210,13 @@ implementation
 {$ifdef FPC}  // FPC expects .o linking, and only one version including FTS
 
   {$ifdef MSWINDOWS}
+    {$L mormot_libsqlite3.o}
+    {$linklib libkernel32.a}
+    {$linklib libgcc.a}
+    {$linklib libmsvcrt.a}
     {$ifdef CPU64}
-      {$L static\x86_64-win64\sqlite3.o}
-      {$linklib static\x86_64-win64\libkernel32.a}
-      {$linklib static\x86_64-win64\libgcc.a}
-      {$linklib static\x86_64-win64\libmsvcrt.a}
       const _PREFIX = '';
     {$else}
-      {$L static\i386-win32\sqlite3.o}
-      {$linklib static\i386-win32\libkernel32.a}
-      {$linklib static\i386-win32\libgcc.a}
-      {$linklib static\i386-win32\libmsvcrt.a}
       const _PREFIX = '_';
     {$endif CPU64}
   {$else}
@@ -251,14 +247,13 @@ implementation
         const _PREFIX = '';
       {$endif}
       {$ifdef CPUINTEL}
-        {$ifdef CPU64}
-          {$L static/x86_64-linux\sqlite3.o}
+	    {$L mormot_libsqlite3.o}
+        {$ifdef CPU64}          
           {$ifdef FPC_CROSSCOMPILING}
             {$linklib static/x86_64-linux\gcc.a}
           {$endif}
           const _PREFIX = '';
         {$else}
-          {$L static/i386-linux\sqlite3.o}
           {$ifdef FPC_CROSSCOMPILING}
             {$linklib static/i386-linux\gcc.a}
           {$endif}
