@@ -1,14 +1,14 @@
 unit Unit1;
 
+{$MODE ObjFpc}{$H+}
+
 interface
 
 uses
   {$ifdef MSWINDOWS}
-  Windows,
-  Messages,
-  Graphics,
+  LCLIntf, LCLType,
   {$endif}
-  Classes, SysUtils, Forms, Controls, Dialogs, StdCtrls,
+  Classes, SysUtils, Graphics, Forms, Controls, Dialogs, StdCtrls,
   SynCommons,
   SynTable,
   mORMot,
@@ -44,11 +44,7 @@ var
 
 implementation
 
-{$ifdef FPC}
 {$R *.lfm}
-{$else}
-{$R *.dfm}
-{$endif}
 
 { TForm1 }
 
@@ -64,8 +60,8 @@ begin
   try
     // we use explicit StringToUTF8() for conversion below
     // a real application should use TLanguageFile.StringToUTF8() in mORMoti18n
-    Rec.Name := StringToUTF8(NameEdit.Text);
-    Rec.Question := StringToUTF8(QuestionMemo.Text);
+    Rec.Name := NameEdit.Text;
+    Rec.Question := QuestionMemo.Text;
     if Database.Add(Rec,true)=0 then
       ShowMessage('Error adding the data') else begin
       NameEdit.Text := '';
@@ -80,11 +76,11 @@ end;
 procedure TForm1.FindButtonClick(Sender: TObject);
 var Rec: TSQLSampleRecord;
 begin
-  Rec := TSQLSampleRecord.Create(Database,'Name=?',[StringToUTF8(NameEdit.Text)]);
+  Rec := TSQLSampleRecord.Create(Database,'Name=?',[NameEdit.Text]);
   try
     if Rec.ID=0 then
       QuestionMemo.Text := 'Not found' else
-      QuestionMemo.Text := UTF8ToString(Rec.Question);
+      QuestionMemo.Text := Rec.Question;
   finally
     Rec.Free;
   end;

@@ -1,9 +1,11 @@
 unit Unit2;
 
+{$MODE ObjFPC}{$H+}
+
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs,
   SynCommons, mORMot, mORMotSQLite3, SynSQLite3Static, StdCtrls, SampleData;
 
@@ -27,7 +29,7 @@ var
 
 implementation
 
-{$R *.dfm}
+{$R *.lfm}
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
