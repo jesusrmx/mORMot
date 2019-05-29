@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
-    <Version Value="9"/>
+    <Version Value="12"/>
     <PathDelim Value="\"/>
     <General>
+      <Flags>
+        <CompatibilityMode Value="True"/>
+      </Flags>
       <SessionStorage Value="InProjectDir"/>
-      <MainUnit Value="0"/>
       <Title Value="Project02"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
-      <Icon Value="0"/>
     </General>
     <i18n>
       <EnableI18N LFM="False"/>
     </i18n>
-    <VersionInfo>
-      <StringTable ProductVersion=""/>
-    </VersionInfo>
     <BuildModes Count="1">
       <Item1 Name="Default" Default="True"/>
     </BuildModes>
@@ -24,21 +22,39 @@
       <Version Value="2"/>
     </PublishOptions>
     <RunParams>
-      <local>
-        <FormatVersion Value="1"/>
-      </local>
+      <FormatVersion Value="2"/>
+      <Modes Count="1">
+        <Mode0 Name="default"/>
+      </Modes>
     </RunParams>
-    <RequiredPackages Count="1">
+    <RequiredPackages Count="4">
       <Item1>
-        <PackageName Value="LCL"/>
+        <PackageName Value="mormot_sqlite3"/>
       </Item1>
+      <Item2>
+        <PackageName Value="mormot_rest"/>
+      </Item2>
+      <Item3>
+        <PackageName Value="mormot_base"/>
+      </Item3>
+      <Item4>
+        <PackageName Value="LCL"/>
+      </Item4>
     </RequiredPackages>
-    <Units Count="1">
+    <Units Count="3">
       <Unit0>
         <Filename Value="Project02.lpr"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="Project02"/>
       </Unit0>
+      <Unit1>
+        <Filename Value="..\01 - In Memory ORM\Unit1.pas"/>
+        <IsPartOfProject Value="True"/>
+        <HasResources Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="..\01 - In Memory ORM\SampleData.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit2>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -48,12 +64,11 @@
       <Filename Value="Project02"/>
     </Target>
     <SearchPaths>
-      <IncludeFiles Value="$(ProjOutDir);..\..\.."/>
-      <OtherUnitFiles Value="..\..;..\..\.."/>
+      <IncludeFiles Value="$(ProjOutDir)"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
-    <Conditionals Value="if TargetOS='darwin' then
-   CustomOptions := ' -Cg-';"/>
+    <Conditionals Value="if TargetOS=&apos;darwin&apos; then
+   CustomOptions := &apos; -Cg-&apos;;"/>
     <Linking>
       <Options>
         <Win32>

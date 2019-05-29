@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
-    <Version Value="11"/>
+    <Version Value="12"/>
     <PathDelim Value="\"/>
     <General>
       <Flags>
         <MainUnitHasCreateFormStatements Value="False"/>
         <MainUnitHasTitleStatement Value="False"/>
+        <CompatibilityMode Value="True"/>
       </Flags>
       <SessionStorage Value="InProjectDir"/>
-      <MainUnit Value="0"/>
       <Title Value="TestSQL3"/>
       <UseAppBundle Value="False"/>
       <ResourceType Value="res"/>
@@ -32,8 +32,8 @@
             <OtherUnitFiles Value="..;DDD\dom;DDD\infra"/>
             <UnitOutputDirectory Value="fpc\lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
-          <Conditionals Value="if TargetOS='darwin' then
-   CustomOptions := ' -Cg-';"/>
+          <Conditionals Value="if TargetOS=&apos;darwin&apos; then
+   CustomOptions := &apos; -Cg-&apos;;"/>
           <Parsing>
             <SyntaxOptions>
               <SyntaxMode Value="Delphi"/>
@@ -80,8 +80,8 @@
             <OtherUnitFiles Value="..;DDD\dom;DDD\infra"/>
             <UnitOutputDirectory Value="fpc\lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
-          <Conditionals Value="if TargetOS='darwin' then
-   CustomOptions := ' -Cg-';"/>
+          <Conditionals Value="if TargetOS=&apos;darwin&apos; then
+   CustomOptions := &apos; -Cg-&apos;;"/>
           <Parsing>
             <SyntaxOptions>
               <SyntaxMode Value="Delphi"/>
@@ -128,8 +128,8 @@
             <OtherUnitFiles Value="..;DDD\dom;DDD\infra"/>
             <UnitOutputDirectory Value="fpc\lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
-          <Conditionals Value="if TargetOS='darwin' then
-   CustomOptions := ' -Cg-';"/>
+          <Conditionals Value="if TargetOS=&apos;darwin&apos; then
+   CustomOptions := &apos; -Cg-&apos;;"/>
           <Parsing>
             <SyntaxOptions>
               <SyntaxMode Value="Delphi"/>
@@ -176,8 +176,8 @@
             <OtherUnitFiles Value="..;DDD\dom;DDD\infra"/>
             <UnitOutputDirectory Value="fpc\lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
-          <Conditionals Value="if TargetOS='darwin' then
-   CustomOptions := ' -Cg-';"/>
+          <Conditionals Value="if TargetOS=&apos;darwin&apos; then
+   CustomOptions := &apos; -Cg-&apos;;"/>
           <Parsing>
             <SyntaxOptions>
               <SyntaxMode Value="Delphi"/>
@@ -224,8 +224,8 @@
             <OtherUnitFiles Value="..;DDD\dom;DDD\infra"/>
             <UnitOutputDirectory Value="fpc\lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
-          <Conditionals Value="if TargetOS='darwin' then
-   CustomOptions := ' -Cg-';"/>
+          <Conditionals Value="if TargetOS=&apos;darwin&apos; then
+   CustomOptions := &apos; -Cg-&apos;;"/>
           <Parsing>
             <SyntaxOptions>
               <SyntaxMode Value="Delphi"/>
@@ -272,8 +272,8 @@
             <OtherUnitFiles Value="..;DDD\dom;DDD\infra"/>
             <UnitOutputDirectory Value="fpc\lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
-          <Conditionals Value="if TargetOS='darwin' then
-   CustomOptions := ' -Cg-';"/>
+          <Conditionals Value="if TargetOS=&apos;darwin&apos; then
+   CustomOptions := &apos; -Cg-&apos;;"/>
           <Parsing>
             <SyntaxOptions>
               <SyntaxMode Value="Delphi"/>
@@ -320,8 +320,8 @@
             <OtherUnitFiles Value="..;DDD\dom;DDD\infra"/>
             <UnitOutputDirectory Value="fpc\lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
-          <Conditionals Value="if TargetOS='darwin' then
-   CustomOptions := ' -Cg-';"/>
+          <Conditionals Value="if TargetOS=&apos;darwin&apos; then
+   CustomOptions := &apos; -Cg-&apos;;"/>
           <Parsing>
             <SyntaxOptions>
               <SyntaxMode Value="Delphi"/>
@@ -368,8 +368,8 @@
             <OtherUnitFiles Value="..;DDD\dom;DDD\infra"/>
             <UnitOutputDirectory Value="fpc\lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
-          <Conditionals Value="if TargetOS='darwin' then
-   CustomOptions := ' -Cg-';"/>
+          <Conditionals Value="if TargetOS=&apos;darwin&apos; then
+   CustomOptions := &apos; -Cg-&apos;;"/>
           <Parsing>
             <SyntaxOptions>
               <SyntaxMode Value="Delphi"/>
@@ -416,8 +416,8 @@
             <OtherUnitFiles Value="..;DDD\dom;DDD\infra"/>
             <UnitOutputDirectory Value="fpc\lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
-          <Conditionals Value="if TargetOS='darwin' then
-   CustomOptions := ' -Cg-';"/>
+          <Conditionals Value="if TargetOS=&apos;darwin&apos; then
+   CustomOptions := &apos; -Cg-&apos;;"/>
           <Parsing>
             <SyntaxOptions>
               <SyntaxMode Value="Delphi"/>
@@ -464,8 +464,8 @@
             <OtherUnitFiles Value="..;DDD\dom;DDD\infra"/>
             <UnitOutputDirectory Value="fpc\lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
-          <Conditionals Value="if TargetOS='darwin' then
-   CustomOptions := ' -Cg-';"/>
+          <Conditionals Value="if TargetOS=&apos;darwin&apos; then
+   CustomOptions := &apos; -Cg-&apos;;"/>
           <Parsing>
             <SyntaxOptions>
               <SyntaxMode Value="Delphi"/>
@@ -509,6 +509,23 @@
         <Mode0 Name="default"/>
       </Modes>
     </RunParams>
+    <RequiredPackages Count="5">
+      <Item1>
+        <PackageName Value="mormot_ext"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="mormot_ddd"/>
+      </Item2>
+      <Item3>
+        <PackageName Value="mormot_sqlite3"/>
+      </Item3>
+      <Item4>
+        <PackageName Value="mormot_rest"/>
+      </Item4>
+      <Item5>
+        <PackageName Value="mormot_base"/>
+      </Item5>
+    </RequiredPackages>
     <Units Count="52">
       <Unit0>
         <Filename Value="TestSQL3.dpr"/>
@@ -733,8 +750,8 @@
       <OtherUnitFiles Value="..;DDD\dom;DDD\infra"/>
       <UnitOutputDirectory Value="fpc\lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
-    <Conditionals Value="if TargetOS='darwin' then
-   CustomOptions := ' -Cg-';"/>
+    <Conditionals Value="if TargetOS=&apos;darwin&apos; then
+   CustomOptions := &apos; -Cg-&apos;;"/>
     <Parsing>
       <SyntaxOptions>
         <SyntaxMode Value="Delphi"/>
