@@ -10,7 +10,6 @@
       <PathDelim Value="\"/>
       <SearchPaths>
         <IncludeFiles Value=".."/>
-        <Libraries Value="..\static\$(TargetCPU)-$(TargetOS)"/>
         <OtherUnitFiles Value=".."/>
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
@@ -116,6 +115,9 @@ as possible, while still maintaining copy-left on code we wrote."/>
       </Item1>
     </RequiredPkgs>
     <UsageOptions>
+      <IncludePath Value=".."/>
+      <LibraryPath Value="..\static\$(TargetCPU)-$(TargetOS)"/>
+      <ObjectPath Value="..\static\$(TargetCPU)-$(TargetOS)"/>
       <UnitPath Value="$(PkgOutDir)"/>
     </UsageOptions>
     <PublishOptions>

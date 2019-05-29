@@ -10,7 +10,6 @@
       <PathDelim Value="\"/>
       <SearchPaths>
         <IncludeFiles Value="..;..\CrossPlatform"/>
-        <Libraries Value="..\static\$(TargetCPU)-$(TargetOS)"/>
         <OtherUnitFiles Value="..\CrossPlatform"/>
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>

@@ -10,7 +10,6 @@
       <PathDelim Value="\"/>
       <SearchPaths>
         <IncludeFiles Value=".."/>
-        <Libraries Value="..\static\$(TargetCPU)-$(TargetOS)"/>
         <OtherUnitFiles Value="..\SQLite3"/>
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
