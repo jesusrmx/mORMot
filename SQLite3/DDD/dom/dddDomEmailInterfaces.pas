@@ -1,4 +1,4 @@
-unit DomUserInterfaces;
+unit dddDomEmailInterfaces;
 
 interface
 
@@ -7,7 +7,7 @@ uses
   SynCommons,
   mORMot,
   mORMotDDD,
-  DomUserTypes;
+  dddDomUserTypes;
 
 type
   IDomUserEmailCheck = interface(IInvokable)

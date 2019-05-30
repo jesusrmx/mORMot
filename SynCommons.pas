@@ -16760,6 +16760,14 @@ function SynLZDecompressBody(P,Body: PAnsiChar; PLen,BodyLen: integer;
 /// deprecated function - please call AlgoSynLZ.DecompressPartial() method
 function SynLZDecompressPartial(P,Partial: PAnsiChar; PLen,PartialLen: integer): integer;
 
+{$IFDEF FPC}
+function U2S(const Text: RawUTF8): string;
+function S2U(const Text: string): RawUTF8;
+function DateTimeToIso(const DateTime: TDateTime; DateOnly: boolean): string;
+function DateTimeToText(const DateTime: TDateTime): string; overload;
+function DateTimeToText(const Time: TTimeLogBits): string; overload;
+function BooleanToString(Value: boolean): string;
+{$ENDIF}
 
 resourcestring
   sInvalidIPAddress = '"%s" is an invalid IP v4 address';
@@ -62567,6 +62575,51 @@ begin
   JSONSerializerFromTextSimpleTypeAdd(
     'TGUID',{$ifdef ISDELPHI2010}TypeInfo(TGUID){$else}nil{$endif},0,0);
 end;
+
+{$IFDEF FPC}
+// functions from mORMoti18n
+// avoid using mORMoti18n unit ...
+function U2S(const Text: RawUTF8): string;
+begin
+  {$ifdef UNICODE}
+  UTF8DecodeToUnicodeString(pointer(Text),length(Text),result);
+  {$else}
+  result := CurrentAnsiConvert.UTF8BufferToAnsi(pointer(Text),length(Text));
+  {$endif}
+end;
+
+function S2U(const Text: string): RawUTF8;
+begin
+  {$ifdef UNICODE}
+  RawUnicodeToUtf8(PWideChar(pointer(Text)),length(Text),result);
+  {$else}
+  result := CurrentAnsiConvert.AnsiBufferToRawUTF8(pointer(Text),length(Text));
+  {$endif}
+end;
+
+function DateTimeToIso(const DateTime: TDateTime; DateOnly: boolean): string;
+const DATEFMT: array[boolean] of string = ('mmm dd, yyyy hh:mm am/pm','mmm dd, yyyy');
+begin // generic US/English date/time to text conversion
+  DateTimeToString(Result, DATEFMT[DateOnly], DateTime);
+end;
+
+function DateTimeToText(const DateTime: TDateTime): string; overload;
+begin
+  // TODO: Add support to language defined formatting ...
+  result := DateTimeToIso(DateTime, false);
+end;
+
+function DateTimeToText(const Time: TTimeLogBits): string; overload;
+begin
+  // TODO: Add support to language defined formatting ...
+  result := DateTimeToIso(Time.ToDateTime,false)
+end;
+
+function BooleanToString(Value: boolean): string;
+begin
+  result := BoolToStr(Value, 'Yes', 'No');
+end;
+{$ENDIF}
 
 initialization
   // initialization of global variables

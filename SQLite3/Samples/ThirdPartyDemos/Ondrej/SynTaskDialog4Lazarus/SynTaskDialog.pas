@@ -178,6 +178,46 @@ var
   TaskDialogIndirect: function(AConfig: pointer; Res: PInteger;
     ResRadio: PInteger; VerifyFlag: PBOOL): HRESULT; stdcall;
 {$ENDIF}
+
+const
+  /// match the 1st custom button ID
+  mrBtn1 = 100;
+  /// match the 2nd custom button ID
+  mrBtn2 = 101;
+  /// match the 3rd custom button ID
+  mrBtn3 = 102;
+  /// match the 4th custom button ID
+  mrBtn4 = 103;
+  /// match the 5th custom button ID
+  mrBtn5 = 104;
+  /// match the 6th custom button ID
+  mrBtn6 = 105;
+  /// match the 7th custom button ID
+  mrBtn7 = 106;
+  /// match the 8th custom button ID
+  mrBtn8 = 107;
+  /// match the 9th custom button ID
+  mrBtn9 = 108;
+
+  /// match the 1st custom radio ID
+  mrRad1 = 200;
+  /// match the 2nd custom radio ID
+  mrRad2 = 201;
+  /// match the 3rd custom radio ID
+  mrRad3 = 202;
+  /// match the 4th custom radio ID
+  mrRad4 = 203;
+  /// match the 5th custom radio ID
+  mrRad5 = 204;
+  /// match the 6th custom radio ID
+  mrRad6 = 205;
+  /// match the 7th custom radio ID
+  mrRad7 = 206;
+  /// match the 8th custom radio ID
+  mrRad8 = 207;
+  /// match the 9th custom radio ID
+  mrRad9 = 208;
+
 type
   {$IFDEF FMX} // width, height, screen position
   TWH = Single;
@@ -474,12 +514,18 @@ type
   /// a generic Button to be used in the User Interface
   // - is always a Themed button: under Delphi 6, since TBitBtn is not themed,
   // it will be a row TButton with no glyph... never mind...
+
+  { TSynButton }
+
   TSynButton = class(TSynButtonParent)
   protected
 {$ifndef USETMSPACK}
     fDropDownMenu: TSynPopupMenu;
 {$endif}
   public
+    constructor CreateKind(Owner: TWinControl; Btn: TCommonButton;
+      Left, Right, Width, Height: integer);
+
     /// set the glyph of the button
     // - set nothing under Delphi 6
     procedure SetBitmap(Bmp: TBitmap);
@@ -626,6 +672,23 @@ begin
       DropDownMenu.Popup(X,Y+Height);
 end;
 {$endif}
+
+constructor TSynButton.CreateKind(Owner: TWinControl; Btn: TCommonButton; Left,
+  Right, Width, Height: integer);
+begin
+  Create(Owner);
+  Parent := Owner;
+  SetBounds(Left,Right,Width,Height);
+  Caption := LoadResString(TD_BTNS(Btn));
+  ModalResult := TD_BTNMOD[Btn];
+  case Btn of
+    cbOK:     Default := true;
+    cbCancel: Cancel := true;
+  end;
+  case Btn of
+    cbOK: SetBitmap(BitmapArrow{$IFDEF WITHLAZARUSARROW}.Bitmap{$ENDIF});
+  end;
+end;
 
 procedure TSynButton.SetBitmap(Bmp: TBitmap);
 begin

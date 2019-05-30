@@ -3,6 +3,11 @@
 // licensed under a MPL/GPL/LGPL tri-license; version 1.18
 unit mORMotUIEdit;
 
+{$ifdef FPC}
+{$mode Delphi}
+{$endif}
+
+
 (*
     This file is part of Synopse mORMot framework.
 
@@ -104,7 +109,10 @@ uses
 {$ifdef USETMSPACK}
   TaskDialog,
 {$endif}
-  SynCommons, SynTable, mORMot, mORMotUILogin, mORMotUI, mORMoti18n, mORMotToolBar,
+  {$IFDEF FPC}
+  DateTimePicker,
+  {$ENDIF}
+  SynCommons, SynTable, mORMot, mORMotUILogin, mORMotUI, {mORMoti18n, }mORMotToolBar,
   SynTaskDialog, StdCtrls, ExtCtrls, ImgList, ComCtrls;
 
 type
@@ -693,7 +701,11 @@ begin
   BtnSave.SetBounds(251,8,100,41);
   BtnSave.Caption := sSave;
   BtnSave.OnClick := BtnSaveClick;
+  {$IFDEF FPC}
+  BtnSave.SetBitmap(BitmapArrow.Bitmap);
+  {$ELSE}
   BtnSave.SetBitmap(BitmapOK);
+  {$ENDIF}
   BtnSave.Anchors := [akRight, akBottom];
   BtnCancel := TSynButton.CreateKind(BottomPanel,cbCancel,363,8,100,41);
   BtnCancel.Anchors := [akRight, akBottom];

@@ -94,8 +94,8 @@ uses
     //LCLProc, LCLIntf, LCLType,
     LCLType,
     LCLIntf,
-    LResources,
-    SynTaskDialog in '.\Samples\ThirdPartyDemos\Ondrej\SynTaskDialog4Lazarus\SynTaskDialog.pas',
+    LResources, LCLStrConsts,
+    SynTaskDialog, // in '.\Samples\ThirdPartyDemos\Ondrej\SynTaskDialog4Lazarus\SynTaskDialog.pas',
   {$else}
     Consts,
     PsAPI,
@@ -286,11 +286,7 @@ function CreateTempForm(const aCaption: string;
 
 implementation
 
-{$ifdef FPC}
-{$R *.lfm}
-{$else}
 {$R *.dfm}
-{$endif}
 
 {$R SQLite3UILogin.res}
 
@@ -340,8 +336,8 @@ end;
 procedure ShowMessage(const Msg: string; Error: boolean=false);
 begin
   if Error then
-    ShowMessage(HtmlEscape(Msg),SMsgDlgError,Error) else
-    ShowMessage(HtmlEscape(Msg),SMsgDlgInformation,Error);
+    ShowMessage(HtmlEscape(Msg),{$ifndef fpc}SMsgDlgError{$else}rsMtError{$endif},Error) else
+    ShowMessage(HtmlEscape(Msg),{$ifndef fpc}SMsgDlgInformation{$else}rsMtInformation{$endif},Error);
 end;
 
 function HtmlEscape(const Msg: string): string;
@@ -678,7 +674,7 @@ const
     [cbYes, cbNo], [cbYes, cbNo, cbCancel]);
 begin
   if aConfirm='' then
-    Confirm := SMsgDlgConfirm else
+    Confirm := {$ifndef fpc}SMsgDlgConfirm{$else}rsMtConfirmation{$endif} else
     Confirm := aConfirm;
 {$ifdef USETMSPACK}
   with CreateAdvTaskDialog do
@@ -785,8 +781,8 @@ procedure TLoginForm.FormCreate(Sender: TObject);
 var P: TSynPicture;
 begin
   SetStyle(self);
-  TSynButton.CreateKind(Self,cbOK,136,163,75,30).Anchors := [akLeft,akBottom];
-  TSynButton.CreateKind(Self,cbCancel,224,163,75,30).Anchors := [akLeft,akBottom];
+  TSynButton.CreateKind(Self,cbOK,136,203,75,30).Anchors := [akLeft,akBottom];
+  TSynButton.CreateKind(Self,cbCancel,224,203,75,30).Anchors := [akLeft,akBottom];
   P := TSynPicture.Create;
   try
     P.LoadFromResourceName(HInstance,'UILogin'); // SQLite3uilogin.png

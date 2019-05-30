@@ -3,6 +3,10 @@
 // licensed under a MPL/GPL/LGPL tri-license; version 1.18
 unit mORMotToolBar;
 
+{$ifdef FPC}
+{$mode Delphi}
+{$endif}
+
 interface
 
 {
@@ -107,7 +111,14 @@ interface
 }
 
 uses
-  Windows, Consts, Dialogs, ShellAPI,
+  {$IFDEF FPC}
+  InterfaceBase,
+  Windows,
+  {$ELSE}
+  Windows,
+  Consts,
+  {$ENDIF}
+  Dialogs, ShellAPI,
   SysUtils, Forms, Classes, Messages, Graphics,
   ImgList, Controls, Grids, ExtCtrls, Menus,
 {$ifdef USETMSPACK}
@@ -119,7 +130,7 @@ uses
   StdCtrls, ComCtrls, SynTaskDialog, Buttons, CommCtrl,
 {$endif USETMSPACK}
   SynCommons, SynTable, SynGdiPlus, SynZip,
-  mORMot, mORMotReport, mORMotUI, mORMoti18n, mORMotUILogin;
+  mORMot, mORMotReport, mORMotUI, {mORMoti18n, }mORMotUILogin;
 
 
 type
@@ -831,8 +842,64 @@ resourcestring
   sApplyToMarked = 'Marked entries';
   sDeleteN = 'About to Delete %d record(s)';
   sTextFile = 'Text File';
+{$IFDEF FPC}
+  SMsgDlgConfirm = 'SMsgDlgConfirm';
+  SMsgDlgHelpHelp = 'Help';
+
+const
+  ID_NO = 7;
+{$ENDIF}
 
 implementation
+
+{$IFDEF FPC}
+function LanguagePropToString(Prop: TSQLPropInfo; Instance: TSQLRecord;
+   Client: TSQLRest): string;
+var Value: RawUTF8;
+    Time: TTimeLogBits;
+    ref: RecordRef;
+begin
+  Result := '';
+  if (Prop=nil) or (Instance=nil) then
+    exit;
+  Value := Prop.GetValue(Instance,false);
+  case Prop.SQLFieldType of
+    sftInteger, sftCurrency, sftFloat, sftUTF8Text, sftAnsiText:
+      result := UTF8ToString(Value);
+    sftDateTime, sftDateTimeMS:
+      result := DateTimeToText(Iso8601ToDateTime(Value));
+    sftTimeLog, sftModTime, sftCreateTime: begin
+      // need temp Iso to avoid URW699 with Delphi 6
+      Time.Value := GetInt64(pointer(Value));
+      result := DateTimeToText(Time);
+    end;
+    sftUnixTime: begin
+      Time.FromUnixTime(GetInt64(pointer(Value)));
+      result := DateTimeToText(Time);
+    end;
+    sftUnixMSTime:
+      result := DateTimeToText(UnixMSTimeToDateTime(GetInt64(pointer(Value))));
+    sftBoolean:
+      result := BooleanToString(boolean(GetInteger(pointer(Value))));
+    sftEnumerate:
+      result := (Prop as TSQLPropInfoRTTIEnum).EnumType^.GetCaption(Value);
+    sftSet:
+      result := (Prop as TSQLPropInfoRTTISet).SetEnumType^.GetCaptionStrings(@Value);
+    sftID:
+      if Client<>nil then
+        result := UTF8ToString(Client.MainFieldValue(
+          TSQLRecordClass((Prop as TSQLPropInfoRTTIID).ObjectClass),
+          GetInt64(pointer(Value)),true));
+    sftRecord: if Client<>nil then begin
+      SetID(pointer(Value),ref.Value);
+      result := UTF8ToString(Client.MainFieldValue(ref.Table(Client.Model),ref.ID,true));
+      if result='' then
+        result := Instance.CaptionName else
+        result := Instance.CaptionName+': '+result;
+    end;
+  end;
+end;
+{$ENDIF}
 
 procedure CreateReportWithIcons(ParamsEnum: PTypeInfo; ImgList: TImageList;
   const Title, Hints: string; StartIndexAt: integer);
@@ -1705,7 +1772,12 @@ begin
 {$endif}
     c := NormToUpper[AnsiChar(aCaption[i])];
     if (c in ['A'..'Z']) and not (ord(c) in Values) then begin
+      {$IFDEF FPC}
+      // workaround for "Error: Internal error 200306031"
+      Values := Values + [ord(c)]; // one char shortcut
+      {$ELSE}
       Include(Values,ord(c)); // one char shortcut
+      {$ENDIF}
       result := string(c);
       exit;
     end;
@@ -2822,7 +2894,11 @@ begin
       if aCaption='' then
         GetCaptionFromPCharLen(TrimLeftLowerCase(aName),aCaption);
       aReport.DrawTextAcrossCols([aCaption,
+       {$IFDEF FPC}
+       LanguagePropToString(List[i],aRecord,Client)]); // PropToString do all the magic
+       {$ELSE}
        Language.PropToString(List[i],aRecord,Client)]); // PropToString do all the magic
+       {$ENDIF}
       if aHint<>'' then
         aReport.NewLine else
         aReport.NewHalfLine;
@@ -2926,7 +3002,11 @@ begin
     end else
       exit; // invalid extension
     if OpenAfterCreation then
+      {$ifdef FPC}
+      ShellExecute(Application.Handle,nil,pointer(aName),nil,nil,SW_SHOWNORMAL);
+      {$else}
       ShellExecute(Application.DialogHandle,nil,pointer(aName),nil,nil,SW_SHOWNORMAL);
+      {$endif}
     result := aName; // mark success
   finally
     Screen.Cursor := crDefault;

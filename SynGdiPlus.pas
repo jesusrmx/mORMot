@@ -166,6 +166,70 @@ type
   PIntegerArray = ^IntegerArray;
 {$endif}
 
+  {$ifdef FPC}
+  TEMRExtTextOut = TEMREXTTEXTOUTA;
+  PEmrGradientFill = ^TEmrGradientFill;
+  tagEMRGRADIENTFILL = record
+    emr: EMR;
+    rclBounds: RECTL; // Inclusive-inclusive bounds in device units
+    nVer: DWORD;
+    nTri: DWORD;
+    ulMode: ULONG;
+    Ver: array [0..0] of TRIVERTEX;
+  end;
+  EMRGRADIENTFILL = tagEMRGRADIENTFILL;
+  TEmrGradientFill = EMRGRADIENTFILL;
+  PEMGradientFill = PEmrGradientFill;
+  PEMRModifyWorldTransform = ^TEMRMODIFYWORLDTRANSFORM;
+  EMREXTCREATEFONTINDIRECTW = record
+       emr : EMR;
+       ihFont : DWORD;
+       elfw : EXTLOGFONTW;
+    end;
+  PEMREXTCREATEFONTINDIRECTW = ^EMREXTCREATEFONTINDIRECTW;
+  TGradientTriangle = _GRADIENT_TRIANGLE;
+  PGradientRect = ^tagGradientRect;
+  tagGRADIENTRECT = record
+    UpperLeft: Cardinal;
+    LowerRight: Cardinal;
+  end;
+  GRADIENTRECT = tagGRADIENTRECT;
+  TGradientRect = GRADIENTRECT;
+  PEMRExtCreateFontIndirect = PEMRExtCreateFontIndirectW;
+
+  tagEMRTRANSPARENTBLT = record
+    emr: EMR;
+    rclBounds: RECTL;
+    xDest: LONG;
+    yDest: LONG;
+    cxDest: LONG;
+    cyDest: LONG;
+    dwRop: DWORD;
+    xSrc: LONG;
+    ySrc: LONG;
+    xformSrc: XFORM;           // Source DC transform
+    crBkColorSrc: COLORREF;    // Source DC BkColor in RGB
+    iUsageSrc: DWORD;          // Source bitmap info color table usage
+                               // (DIB_RGB_COLORS)
+    offBmiSrc: DWORD;          // Offset to the source BITMAPINFO structure
+    cbBmiSrc: DWORD;           // Size of the source BITMAPINFO structure
+    offBitsSrc: DWORD;         // Offset to the source bitmap bits
+    cbBitsSrc: DWORD;          // Size of the source bitmap bits
+    cxSrc: LONG;
+    cySrc: LONG;
+  end;
+  EMRTRANSPARENTBLT = tagEMRTRANSPARENTBLT;
+  PEMRTRANSPARENTBLT = ^EMRTRANSPARENTBLT;
+
+const
+  { Gradient Fill Modes }
+  GRADIENT_FILL_RECT_H = 0;
+  GRADIENT_FILL_RECT_V = 1;
+  GRADIENT_FILL_TRIANGLE = 2;
+
+type
+  {$endif}
+
   /// GDI+ line drawing smoothing types
   TSmoothingMode = (
     smDefault, smHighSpeed, smHighQuality, smNone, smAntiAlias);
@@ -2110,9 +2174,6 @@ end;
  { TGDIPlusEnum }
 
 type
-  {$ifdef FPC}
-  TEMRExtTextOut = TEMREXTTEXTOUTA;
-  {$endif}
 
   /// expected font specifications
   TFontSpec = packed record

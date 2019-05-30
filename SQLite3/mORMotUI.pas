@@ -569,9 +569,9 @@ resourcestring
   SErrorFieldTooLarge = 'Field "%s"'#13'is too large, value must be <= %s';
   SMinMaxValue = 'Min. Value: %s, Max. Value: %s';
 
-{$ifndef FPC}
+{.$ifndef FPC}
 {$define VISTAFORM}
-{$endif}
+{.$endif}
 
 {$ifdef VISTAFORM}
 
@@ -1996,8 +1996,11 @@ begin
   SetWindowLong(Application.Handle, GWL_EXSTYLE,
       ExtendedStyle and not WS_EX_APPWINDOW or WS_EX_TOOLWINDOW);
   ShowWindow(Application.Handle, SW_SHOW);
+  {$IFDEF FPC}
+  // Not supported by Lazarus
+  {$ELSE}
   Application.DialogHandle := Application.Handle;
-end;
+  {$ENDIF}end;
 {$endif}
 
 procedure TVistaForm.BtnClick(Sender: TObject);

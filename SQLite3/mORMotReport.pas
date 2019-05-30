@@ -236,9 +236,15 @@ interface
 
 {$I Synopse.inc} // define HASINLINE USETYPEINFO CPU32 CPU64 OWNNORMTOUPPER
 
+{$IFDEF FPC}
+{$DEFINE DISABLE_RICHEDIT}
+{$ENDIF}
 uses
   SynCommons, SynLZ,
 {$ifndef USEPDFPRINTER}
+  {$ifdef FPC}
+  SynFPCMetaFile, PrintersDlgs,
+  {$ENDIF}
   SynPdf,
 {$endif}
   Windows, Messages, SysUtils, Classes, Contnrs,
@@ -739,7 +745,9 @@ type
     // - you can specify optionally a pointer to a TIntegerDynArray variable,
     // which will be filled with the position of each page last char: it may
     // be handy e.g. to add some cross-reference table about the rendered content
+    {$IFNDEF DISABLE_RICHEDIT}
     procedure AppendRichEdit(RichEditHandle: HWnd; EndOfPagePositions: PIntegerDynArray=nil);
+    {$ENDIF}
     /// jump some line space between paragraphs
     // - Increments the current Y Position the equivalent of a single line
     // relative to the current font height and line spacing
@@ -1421,7 +1429,9 @@ resourcestring
     '&Bookmarks,Copy Page as &Text,P&rint,PDF &Export,&Close,Page fit,Page width';
   /// used to create the pages browsing menu of the report
   sReportPopupMenu2 = 'Pages %d to %d,Page %d';
-
+  {$ifdef FPC}
+  SIniFileWriteError = 'Unable to write to %s'; // ref: https://stackoverflow.com/questions/20766043/delphi-what-is-dax-error-and-how-it-may-be-related-to-ini-file-writing
+  {$endif}
 const
   /// minimum gray border with around preview page
   GRAY_MARGIN = 10;
@@ -1470,7 +1480,9 @@ implementation
 
 uses
   {$ifdef ISDELPHIXE3}System.UITypes,{$endif}
-  Types, Clipbrd, Consts;
+  Types, Clipbrd
+  //, Consts
+  ;
 
 // Miscellaneous functions ...
 
@@ -1490,12 +1502,20 @@ end;
 
 procedure TextOut(Canvas: TCanvas; X,Y: integer; Text: PWideChar; Len: integer); overload;
 begin
+  {$IFDEF FPC}
+  ExtTextOutW(Canvas.Handle,X,Y,ETO_OPAQUE{+ETO_CLIPPED},nil,Text,Len,nil);
+  {$ELSE}
   ExtTextOutW(Canvas.Handle,X,Y,Canvas.TextFlags,nil,Text,Len,nil);
+  {$ENDIF}
 end;
 
 procedure TextOut(Canvas: TCanvas; X,Y: integer; const Text: SynUnicode); overload;
 begin
+  {$IFDEF FPC}
+  ExtTextOutW(Canvas.Handle,X,Y,ETO_OPAQUE{+ETO_CLIPPED},nil,pointer(Text),Length(Text),nil);
+  {$ELSE}
   ExtTextOutW(Canvas.Handle,X,Y,Canvas.TextFlags,nil,pointer(Text),Length(Text),nil);
+  {$ENDIF}
 end;
 
 procedure Register;
@@ -1527,7 +1547,11 @@ begin
       Flags := PRINTER_ENUM_LOCAL;
       Level := 5;
     end;
+    {$IFDEF FPC}
+    EnumPrinters(Flags, nil, level, nil, 0, @Count, @NumInfo);
+    {$ELSE}
     EnumPrinters(Flags, nil, Level, nil, 0, Count, NumInfo);
+    {$ENDIF}
   except
   end;
   result := (count > 0);
@@ -1573,6 +1597,12 @@ function GetDefaultPrinterName: string;
 var Device : array[byte] of char;
     p,p2: PChar;
 begin
+  {$IFDEF FPC}
+  if Printer.Printers.Count>0 then
+    result := Printer.Printers[0]
+  else
+    result := '';
+  {$ELSE}
   GetProfileString('windows', 'device', '', Device, 255);
   p2 := Device;
   while p2^ = ' ' do inc(p2);
@@ -1581,8 +1611,26 @@ begin
   SetLength(result, p2 - p);
   if p2 > p then
    move(p^, pointer(result)^, p2 - p);
+  {$ENDIF}
 end;
 
+{$IFDEF FPC}
+procedure SetCurrentPrinterAsDefault;
+begin
+  // not supported currently
+end;
+
+function CurrentPrinterName: string;
+begin
+  result := Printer.PrinterName;
+end;
+
+function CurrentPrinterPaperSize: string;
+begin
+  result := Printer.PaperSize.PaperName;
+end;
+
+{$ELSE}
 function GetDriverForPrinter(Device: PChar; Driver: PChar): boolean;
 var
   PrintHandle: THandle;
@@ -1677,6 +1725,7 @@ begin
   end;
 end;
 
+{$ENDIF}
 
 // This declaration modifies Delphi's declaration of GetTextExtentExPoint
 // so that the variable to receive partial string extents (p6) is ignored ...
@@ -1727,6 +1776,69 @@ begin
   ls := copy(ls,1,NumCharWhichFit);        //nb: assign ls AFTER rs here
 end;
 
+{$IFDEF FPC}
+
+function BitmapInfoFromBitmap(DC: HDC; Bitmap: HBITMAP; var bitInfo: TBitmapInfo): boolean;
+var
+  relDC: Boolean;
+begin
+
+  relDC := DC=0;
+  if relDC then
+    DC := GetDC(0);
+
+  try
+    Fillchar(bitInfo, sizeOf(bitInfo), 0);
+    bitInfo.bmiHeader.biSize := SizeOf(BITMAPINFOHEADER);
+    result := GetDIBits(DC, Bitmap, 0, 1, nil, bitInfo, DIB_RGB_COLORS)<>0;
+    if result then begin
+      if bitInfo.bmiHeader.biBitCount <= 8 then
+        GetDIBits(DC, Bitmap, 0, 1, nil, bitInfo, DIB_PAL_COLORS);
+    end;
+  finally
+    if relDC then
+      ReleaseDC(0, DC);
+  end;
+
+end;
+
+procedure GetDIBSizes(Bitmap: HBITMAP; var InfoHeaderSize: DWORD; var ImageSize: DWORD);
+var
+  bitInfo: TBitmapInfo;
+begin
+  infoHeaderSize := 0;
+  imageSize := 0;
+  if BitmapInfoFromBitmap(0, Bitmap, bitInfo) then begin
+    InfoHeaderSize := BitInfo.bmiHeader.biSize;
+    ImageSize := BitInfo.bmiHeader.biSizeImage;
+  end;
+end;
+
+function GetDIB(Bitmap: HBITMAP; Palette: HPALETTE; var bitInfo: TBitmapInfo; var Bits): boolean;
+var
+  DC: HDC;
+  scanLines: Integer;
+  Usage: UINT;
+begin
+  DC := CreateCompatibleDC(0);
+  try
+    if Palette <> 0 then begin
+      SelectPalette(DC, Palette, false);
+      RealizePalette(DC);
+    end;
+    result := BitmapInfoFromBitmap(DC, Bitmap, bitInfo);
+    if result then begin
+      if bitInfo.bmiHeader.biBitCount<=8 then Usage := DIB_PAL_COLORS
+      else                                    Usage := DIB_RGB_COLORS;
+      scanLines := GetDIBits(DC, Bitmap, 0, bitInfo.bmiHeader.biHeight, @Bits, bitInfo, Usage);
+      result := (scanLines = bitInfo.bmiHeader.biHeight);
+    end;
+  finally
+    DeleteDC(DC);
+  end;
+end;
+
+{$ENDIF}
 
 procedure PrintBitmap(Canvas: TCanvas; DestRect: TRect; Bitmap: TBitmap);
 var BitmapHeader:  pBitmapInfo;
@@ -1735,7 +1847,8 @@ var BitmapHeader:  pBitmapInfo;
     ImageSize   :  dword;
 begin
   // we expect the bitmap to be stored as DIB in the TMetaFile content
-  GetDIBSizes(Bitmap.Handle,HeaderSize,ImageSize);
+  HeaderSize := 0; ImageSize := 0;
+  GetDIBSizes(Bitmap.Handle, HeaderSize, ImageSize);
   GetMem(BitmapHeader,HeaderSize);
   GetMem(BitmapImage,ImageSize);
   try
@@ -1839,6 +1952,14 @@ begin
       fCurrentPrinter := CurrentPrinterName;
       if (Printer.orientation <> fOrientation) then
         Printer.orientation := fOrientation;
+      {$IFDEF FPC}
+      fPrinterPxPerInch.x := Printer.XDPI;
+      fPrinterPxPerInch.y := Printer.YDPI;
+      fPhysicalSizePx.x := Printer.PaperSize.PaperRect.PhysicalRect.Right;
+      fPhysicalOffsetPx.x := Printer.PaperSize.PaperRect.WorkRect.Left;
+      fPhysicalSizePx.y := Printer.PaperSize.PaperRect.PhysicalRect.Bottom;
+      fPhysicalOffsetPx.y := Printer.PaperSize.PaperRect.WorkRect.Top;
+      {$ELSE}
       fPtrHdl := Printer.Handle;
       fPrinterPxPerInch.x := GetDeviceCaps(fPtrHdl, LOGPIXELSX);
       fPrinterPxPerInch.y := GetDeviceCaps(fPtrHdl, LOGPIXELSY);
@@ -1846,6 +1967,7 @@ begin
       fPhysicalOffsetPx.x := GetDeviceCaps(fPtrHdl,PHYSICALOFFSETX);
       fPhysicalSizePx.y := GetDeviceCaps(fPtrHdl, PHYSICALHEIGHT);
       fPhysicalOffsetPx.y := GetDeviceCaps(fPtrHdl,PHYSICALOFFSETY);
+      {$ENDIF}
       fDefaultLineWidth := (fPrinterPxPerInch.y*25) div 2540; // 0.25 mm
       exit; // if a printer was found then that's all that's needed
     except
@@ -1856,11 +1978,18 @@ begin
   if fHasPrinterInstalled then begin
     if (Printer.orientation <> fOrientation) then
       Printer.orientation := fOrientation;
+    {$IFDEF FPC}
+    fPhysicalSizePx.X := round(Printer.PaperSize.PaperRect.PhysicalRect.Right *
+        screen.pixelsperinch / Printer.XDPI);
+    fPhysicalSizePx.Y := round(Printer.PaperSize.PaperRect.PhysicalRect.Bottom *
+        screen.pixelsperinch / Printer.YDPI);
+    {$ELSE}
     fPtrHdl := printer.Handle;
     fPhysicalSizePx.X := round(GetDeviceCaps(fPtrHdl, PHYSICALWIDTH) *
         screen.pixelsperinch / GetDeviceCaps(fPtrHdl, LOGPIXELSX));
     fPhysicalSizePx.Y := round(GetDeviceCaps(fPtrHdl, PHYSICALHEIGHT) *
         screen.pixelsperinch / GetDeviceCaps(fPtrHdl, LOGPIXELSY));
+    {$ENDIF}
   end else begin
     // if no printer drivers installed use the screen as device context and
     // assume A4 page size...
@@ -1964,6 +2093,10 @@ procedure TGDIPages.ResizeAndCenterPaintbox;
 var l,t, i: integer;
     siz: TPoint;
 begin
+  {$ifdef FPC}
+  if (csLoading in ComponentState) or not HandleAllocated then
+    exit;
+  {$endif}
   if cardinal(page-1)<cardinal(length(fPages)) then
     siz := fPages[page-1].SizePx else
     siz := fPhysicalSizePx;
@@ -2188,7 +2321,11 @@ function TGDIPages.CreateMetaFile(aWidth, aHeight: integer): TMetaFile;
 begin
   result := TMetafile.Create;
   if Self=nil then exit;
+  {$IFDEF FPC}
+  //result.Enhanced := true;
+  {$ELSE}
   result.Enhanced := true;
+  {$ENDIF}
   result.Width := aWidth;
   result.Height := aHeight;
 end;
@@ -2267,7 +2404,11 @@ end;
 
 function TGDIPages.CreateMetafileCanvas(Page: TMetafile): TMetafileCanvas;
 begin
+  {$IFDEF FPC}
+  result := TMetafileCanvas.Create(Page,Printer.Canvas.Handle);
+  {$ELSE}
   result := TMetafileCanvas.Create(Page,fPtrHdl);
+  {$ENDIF}
   if Self=nil then exit;
   UpdateMetafileCanvasFont(result);
   result.Pen.Width := fPrinterPxPerInch.y div screen.PixelsPerInch;
@@ -4317,7 +4458,11 @@ begin
     if ColRight>ColLeft then begin
       if ColBold then
         Font.Style := Font.Style+[fsBold];
+      {$IFDEF FPC}
+      Options := ETO_CLIPPED; // unicode version of TextRect()
+      {$ELSE}
       Options := ETO_CLIPPED or TextFlags; // unicode version of TextRect()
+      {$ENDIF}
       if Brush.Style <> bsClear then
         Options := Options or ETO_OPAQUE;
       InternalUnicodeString(s,PW,PWLen,@size);
@@ -4914,6 +5059,7 @@ begin
   FillRect(Message.DC,R,Brush.Handle);
 end;
 
+{$IFNDEF DISABLE_RICHEDIT}
 procedure TGDIPages.AppendRichEdit(RichEditHandle: HWnd;
   EndOfPagePositions: PIntegerDynArray);
 var Range: TFormatRange;
@@ -4961,6 +5107,7 @@ begin
     end;
   end;
 end;
+{$ENDIF}
 
 function TGDIPages.AddBookMark(const aBookmarkName: string; aYPosition: integer=0): boolean;
 begin
