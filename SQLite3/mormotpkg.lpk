@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Package Version="4">
+    <PathDelim Value="\"/>
+    <Name Value="MormotPkg"/>
+    <Type Value="RunTimeOnly"/>
+    <CompilerOptions>
+      <Version Value="11"/>
+      <PathDelim Value="\"/>
+      <SearchPaths>
+        <OtherUnitFiles Value="DDD\dom;DDD\infra"/>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\"/>
+      </SearchPaths>
+    </CompilerOptions>
+    <Version Major="1"/>
+    <Files Count="22">
+      <Item1>
+        <Filename Value="mORMot.pas"/>
+        <UnitName Value="mORMot"/>
+      </Item1>
+      <Item2>
+        <Filename Value="mORMotDB.pas"/>
+        <UnitName Value="mORMotDB"/>
+      </Item2>
+      <Item3>
+        <Filename Value="mORMotDDD.pas"/>
+        <UnitName Value="mORMotDDD"/>
+      </Item3>
+      <Item4>
+        <Filename Value="mORMotHttpClient.pas"/>
+        <UnitName Value="mORMotHttpClient"/>
+      </Item4>
+      <Item5>
+        <Filename Value="mORMotMidasVCL.pas"/>
+        <UnitName Value="mORMotMidasVCL"/>
+      </Item5>
+      <Item6>
+        <Filename Value="mORMotMongoDB.pas"/>
+        <UnitName Value="mORMotMongoDB"/>
+      </Item6>
+      <Item7>
+        <Filename Value="mORMotMVC.pas"/>
+        <UnitName Value="mORMotMVC"/>
+      </Item7>
+      <Item8>
+        <Filename Value="mORMotService.pas"/>
+        <UnitName Value="mORMotService"/>
+      </Item8>
+      <Item9>
+        <Filename Value="mORMotSQLite3.pas"/>
+        <UnitName Value="mORMotSQLite3"/>
+      </Item9>
+      <Item10>
+        <Filename Value="mORMotVCL.pas"/>
+        <UnitName Value="mORMotVCL"/>
+      </Item10>
+      <Item11>
+        <Filename Value="DDD\dom\dddDomAuthInterfaces.pas"/>
+        <UnitName Value="dddDomAuthInterfaces"/>
+      </Item11>
+      <Item12>
+        <Filename Value="DDD\dom\dddDomEmailInterfaces.pas"/>
+        <UnitName Value="DomUserInterfaces"/>
+      </Item12>
+      <Item13>
+        <Filename Value="DDD\dom\dddDomUserCQRS.pas"/>
+        <UnitName Value="dddDomUserCQRS"/>
+      </Item13>
+      <Item14>
+        <Filename Value="DDD\dom\dddDomUserInterfaces.pas"/>
+        <UnitName Value="dddDomUserInterfaces"/>
+      </Item14>
+      <Item15>
+        <Filename Value="DDD\dom\dddDomUserTypes.pas"/>
+        <UnitName Value="dddDomUserTypes"/>
+      </Item15>
+      <Item16>
+        <Filename Value="DDD\infra\dddInfraApps.pas"/>
+        <UnitName Value="dddInfraApps"/>
+      </Item16>
+      <Item17>
+        <Filename Value="DDD\infra\dddInfraAuthRest.pas"/>
+        <UnitName Value="dddInfraAuthRest"/>
+      </Item17>
+      <Item18>
+        <Filename Value="DDD\infra\dddInfraEmail.pas"/>
+        <UnitName Value="dddInfraEmail"/>
+      </Item18>
+      <Item19>
+        <Filename Value="DDD\infra\dddInfraEmailer.pas"/>
+        <UnitName Value="dddInfraEmailer"/>
+      </Item19>
+      <Item20>
+        <Filename Value="DDD\infra\dddInfraRepoUser.pas"/>
+        <UnitName Value="dddInfraRepoUser"/>
+      </Item20>
+      <Item21>
+        <Filename Value="DDD\infra\dddInfraSettings.pas"/>
+        <UnitName Value="dddInfraSettings"/>
+      </Item21>
+      <Item22>
+        <Filename Value="mORMotHttpServer.pas"/>
+        <UnitName Value="mORMotHttpServer"/>
+      </Item22>
+    </Files>
+    <RequiredPkgs Count="2">
+      <Item1>
+        <PackageName Value="synopsepkg"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="FCL"/>
+      </Item2>
+    </RequiredPkgs>
+    <UsageOptions>
+      <UnitPath Value="$(PkgOutDir)"/>
+    </UsageOptions>
+    <PublishOptions>
+      <Version Value="2"/>
+      <UseFileFilters Value="True"/>
+    </PublishOptions>
+  </Package>
+</CONFIG>

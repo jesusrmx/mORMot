@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Package Version="4">
+    <PathDelim Value="\"/>
+    <Name Value="SynopsePkg"/>
+    <Type Value="RunAndDesignTime"/>
+    <CompilerOptions>
+      <Version Value="11"/>
+      <PathDelim Value="\"/>
+      <SearchPaths>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\"/>
+      </SearchPaths>
+    </CompilerOptions>
+    <Version Major="1"/>
+    <Files Count="37">
+      <Item1>
+        <Filename Value="PasZip.pas"/>
+        <UnitName Value="PasZip"/>
+      </Item1>
+      <Item2>
+        <Filename Value="SynBidirSock.pas"/>
+        <UnitName Value="SynBidirSock"/>
+      </Item2>
+      <Item3>
+        <Filename Value="SynBigTable.pas"/>
+        <UnitName Value="SynBigTable"/>
+      </Item3>
+      <Item4>
+        <Filename Value="SynCommons.pas"/>
+        <UnitName Value="SynCommons"/>
+      </Item4>
+      <Item5>
+        <Filename Value="SynCrtSock.pas"/>
+        <UnitName Value="SynCrtSock"/>
+      </Item5>
+      <Item6>
+        <Filename Value="SynCrypto.pas"/>
+        <UnitName Value="SynCrypto"/>
+      </Item6>
+      <Item7>
+        <Filename Value="SynDB.pas"/>
+        <UnitName Value="SynDB"/>
+      </Item7>
+      <Item8>
+        <Filename Value="SynDBDataset.pas"/>
+        <UnitName Value="SynDBDataset"/>
+      </Item8>
+      <Item9>
+        <Filename Value="SynDBODBC.pas"/>
+        <UnitName Value="SynDBODBC"/>
+      </Item9>
+      <Item10>
+        <Filename Value="SynDBOracle.pas"/>
+        <UnitName Value="SynDBOracle"/>
+      </Item10>
+      <Item11>
+        <Filename Value="SynDBRemote.pas"/>
+        <UnitName Value="SynDBRemote"/>
+      </Item11>
+      <Item12>
+        <Filename Value="SynDBSQLite3.pas"/>
+        <UnitName Value="SynDBSQLite3"/>
+      </Item12>
+      <Item13>
+        <Filename Value="SynEcc.pas"/>
+        <UnitName Value="SynEcc"/>
+      </Item13>
+      <Item14>
+        <Filename Value="SynFastWideString.pas"/>
+        <UnitName Value="SynFastWideString"/>
+      </Item14>
+      <Item15>
+        <Filename Value="SynFPCTypInfo.pas"/>
+        <UnitName Value="SynFPCTypInfo"/>
+      </Item15>
+      <Item16>
+        <Filename Value="SynLizard.pas"/>
+        <UnitName Value="SynLizard"/>
+      </Item16>
+      <Item17>
+        <Filename Value="SynLog.pas"/>
+        <UnitName Value="SynLog"/>
+      </Item17>
+      <Item18>
+        <Filename Value="SynLZ.pas"/>
+        <UnitName Value="SynLZ"/>
+      </Item18>
+      <Item19>
+        <Filename Value="SynLZO.pas"/>
+        <UnitName Value="SynLZO"/>
+      </Item19>
+      <Item20>
+        <Filename Value="SynMongoDB.pas"/>
+        <UnitName Value="SynMongoDB"/>
+      </Item20>
+      <Item21>
+        <Filename Value="SynMustache.pas"/>
+        <UnitName Value="SynMustache"/>
+      </Item21>
+      <Item22>
+        <Filename Value="SynOleDB.pas"/>
+        <UnitName Value="SynOleDB"/>
+      </Item22>
+      <Item23>
+        <Filename Value="SynOpenSSL.pas"/>
+        <UnitName Value="SynOpenSSL"/>
+      </Item23>
+      <Item24>
+        <Filename Value="SynProtoRTSPHTTP.pas"/>
+        <UnitName Value="SynProtoRTSPHTTP"/>
+      </Item24>
+      <Item25>
+        <Filename Value="SynSM.pas"/>
+        <UnitName Value="SynSM"/>
+      </Item25>
+      <Item26>
+        <Filename Value="SynSMAPI.pas"/>
+        <UnitName Value="SynSMAPI"/>
+      </Item26>
+      <Item27>
+        <Filename Value="SynSQLite3.pas"/>
+        <UnitName Value="SynSQLite3"/>
+      </Item27>
+      <Item28>
+        <Filename Value="SynSQLite3Static.pas"/>
+        <UnitName Value="SynSQLite3Static"/>
+      </Item28>
+      <Item29>
+        <Filename Value="SynSSPI.pas"/>
+        <UnitName Value="SynSSPI"/>
+      </Item29>
+      <Item30>
+        <Filename Value="SynSSPIAuth.pas"/>
+        <UnitName Value="SynSSPIAuth"/>
+      </Item30>
+      <Item31>
+        <Filename Value="SynTable.pas"/>
+        <UnitName Value="SynTable"/>
+      </Item31>
+      <Item32>
+        <Filename Value="SynTests.pas"/>
+        <UnitName Value="SynTests"/>
+      </Item32>
+      <Item33>
+        <Filename Value="SynVirtualDataSet.pas"/>
+        <UnitName Value="SynVirtualDataSet"/>
+      </Item33>
+      <Item34>
+        <Filename Value="SynWinSock.pas"/>
+        <UnitName Value="SynWinSock"/>
+      </Item34>
+      <Item35>
+        <Filename Value="SynZip.pas"/>
+        <UnitName Value="SynZip"/>
+      </Item35>
+      <Item36>
+        <Filename Value="SynZipFiles.pas"/>
+        <UnitName Value="SynZipFiles"/>
+      </Item36>
+      <Item37>
+        <Filename Value="SynZLibSSE.pas"/>
+        <UnitName Value="SynZLibSSE"/>
+      </Item37>
+    </Files>
+    <RequiredPkgs Count="1">
+      <Item1>
+        <PackageName Value="FCL"/>
+      </Item1>
+    </RequiredPkgs>
+    <UsageOptions>
+      <IncludePath Value="."/>
+      <LibraryPath Value="static\$(TargetCPU)-$(TargetOS)"/>
+      <ObjectPath Value="static\$(TargetCPU)-$(TargetOS)"/>
+      <UnitPath Value="$(PkgOutDir)"/>
+    </UsageOptions>
+    <PublishOptions>
+      <Version Value="2"/>
+      <UseFileFilters Value="True"/>
+    </PublishOptions>
+  </Package>
+</CONFIG>
