@@ -1,11 +1,13 @@
 unit Unit1;
 
+{$MODE Delphi}
+
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ShellApi, Printers,
-  SynCommons, SynPdf, mORMotReport;
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, Printers,
+  SynCommons, {$ifdef FPC}SynFPCMetafile,{$endif}SynPdf, mORMotReport;
 
 type
   TForm1 = class(TForm)
@@ -31,8 +33,8 @@ var
 
 implementation
 
-{$R *.dfm}
-{$R Vista.res}
+{$R *.lfm}
+//{$R Vista.res}
 
 procedure TForm1.btn2Click(Sender: TObject);
 begin
@@ -184,7 +186,7 @@ begin
     end; }
     FN := ChangeFileExt(ExeVersion.ProgramFileName,'.pdf');
     SaveToFile(FN);
-    ShellExecute(Handle,nil,pointer(FN),nil,nil,SW_SHOWNORMAL);
+     OpenDocument(FN); { *Converted from ShellExecute* }
   finally
     Free;
   end;
