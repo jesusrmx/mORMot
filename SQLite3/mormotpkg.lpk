@@ -9,11 +9,11 @@
       <PathDelim Value="\"/>
       <SearchPaths>
         <OtherUnitFiles Value="DDD\dom;DDD\infra"/>
-        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\"/>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
     <Version Major="1"/>
-    <Files Count="22">
+    <Files Count="23">
       <Item1>
         <Filename Value="mORMot.pas"/>
         <UnitName Value="mORMot"/>
@@ -60,7 +60,7 @@
       </Item11>
       <Item12>
         <Filename Value="DDD\dom\dddDomEmailInterfaces.pas"/>
-        <UnitName Value="DomUserInterfaces"/>
+        <UnitName Value="dddDomEmailInterfaces"/>
       </Item12>
       <Item13>
         <Filename Value="DDD\dom\dddDomUserCQRS.pas"/>
@@ -102,6 +102,10 @@
         <Filename Value="mORMotHttpServer.pas"/>
         <UnitName Value="mORMotHttpServer"/>
       </Item22>
+      <Item23>
+        <Filename Value="mORMotWrappers.pas"/>
+        <UnitName Value="mORMotWrappers"/>
+      </Item23>
     </Files>
     <RequiredPkgs Count="2">
       <Item1>
