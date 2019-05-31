@@ -27,16 +27,13 @@
         <Mode0 Name="default"/>
       </Modes>
     </RunParams>
-    <RequiredPackages Count="3">
+    <RequiredPackages Count="2">
       <Item1>
-        <PackageName Value="mormot_sqlite3"/>
+        <PackageName Value="MormotPkg"/>
       </Item1>
       <Item2>
-        <PackageName Value="mormot_rest"/>
-      </Item2>
-      <Item3>
         <PackageName Value="LCL"/>
-      </Item3>
+      </Item2>
     </RequiredPackages>
     <Units Count="3">
       <Unit0>
@@ -46,7 +43,9 @@
       <Unit1>
         <Filename Value="Unit2.pas"/>
         <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form1"/>
         <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
       </Unit1>
       <Unit2>
         <Filename Value="..\01 - In Memory ORM\SampleData.pas"/>

@@ -29,7 +29,7 @@
     </RunParams>
     <RequiredPackages Count="2">
       <Item1>
-        <PackageName Value="mormot_rest"/>
+        <PackageName Value="MormotPkg"/>
       </Item1>
       <Item2>
         <PackageName Value="LCL"/>
