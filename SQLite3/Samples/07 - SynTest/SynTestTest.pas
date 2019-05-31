@@ -1,5 +1,7 @@
 unit SynTestTest;
 
+{$MODE Delphi}
+
 interface
 
 uses
