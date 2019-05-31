@@ -394,6 +394,9 @@ uses
   VCL.Graphics,
   {$else}
   Graphics,
+  {$ifdef FPC}
+  SynFPCMetaFile,
+  {$endif}
   {$endif}
   {$endif}
   {$endif MSWINDOWS}
@@ -3161,6 +3164,13 @@ function ScriptApplyDigitSubstitution(
 
 implementation
 
+{$IFDEF FPC}
+  // Reimport some windows functions that fpc bindings declare with wrong signature.
+  function FpcRepl_GdiComment(_para1:HDC; _para2:UINT; _para3:LPBYTE):WINBOOL; stdcall; external 'gdi32' name 'GdiComment';
+  // mising resource strings
+  resourcestring
+    SDateEncodeError = 'Date Encode Error or something like that';
+{$ENDIF}
 
 function RGBA(r, g, b, a: cardinal): COLORREF; {$ifdef HASINLINE}inline;{$endif}
 begin
@@ -3178,11 +3188,11 @@ function GetTTFData(aDC: HDC; aTableName: PAnsiChar; var Ref: TWordDynArray): po
 var L: cardinal;
 begin
   result := nil;
-  L := GetFontData(aDC,PCardinal(aTableName)^,0,nil,0);
+  L := Windows.GetFontData(aDC,PCardinal(aTableName)^,0,nil,0);
   if L=GDI_ERROR then
     exit;
   SetLength(ref,L shr 1+1);
-  if GetFontData(aDC,PCardinal(aTableName)^,0,pointer(ref),L)=GDI_ERROR then
+  if Windows.GetFontData(aDC,PCardinal(aTableName)^,0,pointer(ref),L)=GDI_ERROR then
     exit;
   result := pointer(ref);
   SwapBuffer(Result,L shr 1);
@@ -3197,7 +3207,11 @@ begin
   Count := 0;
   Flags := PRINTER_ENUM_CONNECTIONS or PRINTER_ENUM_LOCAL;
   Level := 4;
+  {$IFDEF FPC}
+  EnumPrinters(Flags, nil, level, nil, 0, @Count, @NumInfo);
+  {$ELSE}
   EnumPrinters(Flags, nil, Level, nil, 0, Count, NumInfo);
+  {$ENDIF}
   result := (count > 0);
 end;
 
@@ -3303,7 +3317,12 @@ begin // high(TPdfGDIComment)<$47 so it will never begin with GDICOMMENT_IDENTIF
   D := pointer(Data);
   D^ := AnsiChar(pgcBookmark);
   MoveFast(pointer(aBookmarkName)^,D[1],L);
+  {$IFDEF FPC}
+  FpcRepl_GdiComment(MetaHandle,L+1,PBYTE(D));
+  {$ELSE}
   Windows.GdiComment(MetaHandle,L+1,D);
+  {$ENDIF}
+
 end;
 
 procedure GDICommentOutline(MetaHandle: HDC; const aTitle: RawUTF8; aLevel: Integer);
@@ -3317,7 +3336,11 @@ begin // high(TPdfGDIComment)<$47 so it will never begin with GDICOMMENT_IDENTIF
   D[0] := AnsiChar(pgcOutline);
   D[1] := AnsiChar(aLevel);
   MoveFast(pointer(aTitle)^,D[2],L);
+  {$IFDEF FPC}
+  FpcRepl_GdiComment(MetaHandle,L+2,PBYTE(D));
+  {$ELSE}
   Windows.GdiComment(MetaHandle,L+2,D);
+  {$ENDIF}
 end;
 
 procedure GDICommentLink(MetaHandle: HDC; const aBookmarkName: RawUTF8; const aRect: TRect;
@@ -3334,7 +3357,11 @@ begin // high(TPdfGDIComment)<$47 so it will never begin with GDICOMMENT_IDENTIF
     D^ := AnsiChar(pgcLink);
   PRect(D+1)^ := aRect;
   MoveFast(pointer(aBookmarkName)^,D[1+sizeof(TRect)],L);
+  {$IFDEF FPC}
+  FpcRepl_GdiComment(MetaHandle,L+(1+sizeof(TRect)),PBYTE(D));
+  {$ELSE}
   Windows.GdiComment(MetaHandle,L+(1+sizeof(TRect)),D);
+  {$ENDIF}
 end;
 
 {$ifndef DELPHI5OROLDER}
@@ -5335,8 +5362,17 @@ begin
 end;
 
 function TPdfWrite.Position: Integer;
+{$IFDEF FPC}
+var L: Integer;
+{$ENDIF}
 begin
+  {$IFDEF FPC}
+  L := B - @Tmp;
+  result := fDestStreamPosition;
+  inc(result, L);
+  {$ELSE}
   result := fDestStreamPosition+B-@Tmp;
+  {$ENDIF}
 end;
 
 procedure TPdfWrite.Save;
@@ -6423,6 +6459,15 @@ const PERROW: array[TPixelFormat] of byte = (0,1,4,8,15,16,24,32,0);
     Hash.c2 := Hash.c2+Hash.c0; // naive, but sufficient, cascading
     Hash.c3 := Hash.c3+Hash.c1;
   end;
+  {$IFDEF FPC}
+  {REF: http://delphidabbler.com/tips/145}
+  function BytesPerScanline(PixelsPerScanline, BitsPerPixel, Alignment: Longint): Longint;
+    begin
+      Dec(Alignment);
+      Result := ((PixelsPerScanline * BitsPerPixel) + Alignment) and not Alignment;
+      Result := Result div 8;
+    end;
+  {$ENDIF}
 begin
   result := '';
   if (self=nil) or (B=nil) then exit;
@@ -7422,7 +7467,7 @@ begin
   result := FPage.TextWidth(Text);
 end;
 
-{$ifdef DELPHI5OROLDER}
+{$if defined(DELPHI5OROLDER) or defined(FPC)}
 function StrCharLength(const Str: PChar): Cardinal;
 begin
  result := Cardinal(CharNext(Str))-Cardinal(Str);
@@ -8161,7 +8206,11 @@ begin
     fHGDI := AWinAnsiFont.fHGDI; // only one GDI resource is used for both
   end else begin
     fWinAnsiFont := self;
+    {$IFDEF FPC}
+    fHGDI := CreateFontIndirectW(@ALogFont);
+    {$ELSE}
     fHGDI := CreateFontIndirectW(ALogFont);
+    {$ENDIF}
   end;
   if AWinAnsiFont<>nil then // we use the Postscript Name here
     aFontName := AWinAnsiFont.fName else
@@ -8254,6 +8303,8 @@ begin
 end;
 
 function TPdfFontTrueType.GetWideCharWidth(aWideChar: WideChar): Integer;
+var
+  x: Integer;
 begin
   self := self.WinAnsiFont; // we need fUsedWide[] to be used glyphs
   result := WideCharToWinAnsi(ord(aWideChar));
@@ -8261,7 +8312,13 @@ begin
     if (fWinAnsiWidth<>nil) and (result>=32) then
       result := fWinAnsiWidth[AnsiChar(result)] else
       result := fDefaultWidth else
-      result := fUsedWide[FindOrAddUsedWideChar(aWideChar)].Width;
+      begin
+        x := FindOrAddUsedWideChar(aWideChar);
+        if (x>=0) and (x<Length(fUsedWide)) then
+          result := fUsedWide[x].Width
+        else
+          result := fDefaultWidth;
+      end;
 end;
 
 { font subset embedding using Windows XP CreateFontPackage() FontSub.dll
@@ -8411,12 +8468,12 @@ begin
         fDoc.GetDCWithFont(self);
         {$ifndef DELPHI5OROLDER}
         // is the font in a .ttc collection?
-        ttfSize := GetFontData(fDoc.FDC,TTCF_TABLE,0,nil,0);
+        ttfSize := windows.GetFontData(fDoc.FDC,TTCF_TABLE,0,nil,0);
         if ttfSize<>GDI_ERROR then begin
           // Yes, the font is in a .ttc collection
           // find out how many fonts are included in the collection
           SetLength(ttcBytes,4);
-          if GetFontData(fDoc.FDC,TTCF_TABLE,8,pointer(ttcBytes),4) <> GDI_ERROR then
+          if windows.GetFontData(fDoc.FDC,TTCF_TABLE,8,pointer(ttcBytes),4) <> GDI_ERROR then
             ttcNumFonts := ttcBytes[3] else // Higher bytes will be zero
             ttcNumFonts := 1;
           // we need to find out the index of the font within the ttc collection
@@ -8429,14 +8486,14 @@ begin
         end else
         {$endif}
         begin
-          ttfSize := GetFontData(fDoc.FDC,0,0,nil,0);
+          ttfSize := windows.GetFontData(fDoc.FDC,0,0,nil,0);
           usFlags := TTFCFP_FLAGS_SUBSET;
           ttcIndex := 0;
           tableTag := 0;
         end;
         if ttfSize<>GDI_ERROR then begin
           SetLength(ttf,ttfSize);
-          if GetFontData(fDoc.FDC,tableTag,0,pointer(ttf),ttfSize)<>GDI_ERROR then begin
+          if windows.GetFontData(fDoc.FDC,tableTag,0,pointer(ttf),ttfSize)<>GDI_ERROR then begin
             fFontFile2 := TPdfStream.Create(fDoc);
             if not fDoc.fEmbeddedWholeTTF then begin
               if FontSub=INVALID_HANDLE_VALUE then begin
@@ -9253,16 +9310,16 @@ begin
     InitTransX := DefaultIdentityMatrix;
     E.InitTransformMatrix := InitTransX;
     E.ScaleMatrix(@InitTransX, MWT_SET); // keep init
-    E.InitMetaRgn(PEnhMetaHeader(R)^.rclBounds);
+    E.InitMetaRgn(TRECT(PEnhMetaHeader(R)^.rclBounds));
   end;
   EMR_SETWINDOWEXTEX:
     WinSize := PEMRSetWindowExtEx(R)^.szlExtent;
   EMR_SETWINDOWORGEX:
-    WinOrg := PEMRSetWindowOrgEx(R)^.ptlOrigin;
+    WinOrg := TPoint(PEMRSetWindowOrgEx(R)^.ptlOrigin);
   EMR_SETVIEWPORTEXTEX:
     ViewSize := PEMRSetViewPortExtEx(R)^.szlExtent;
   EMR_SETVIEWPORTORGEX:
-    ViewOrg := PEMRSetViewPortOrgEx(R)^.ptlOrigin;
+    ViewOrg := TPoint(PEMRSetViewPortOrgEx(R)^.ptlOrigin);
   EMR_SETBKMODE:
     font.BkMode := PEMRSetBkMode(R)^.iMode;
   EMR_SETBKCOLOR:
@@ -9276,7 +9333,7 @@ begin
   EMR_SETTEXTALIGN:
     font.Align := PEMRSetTextAlign(R)^.iMode;
   EMR_EXTTEXTOUTA, EMR_EXTTEXTOUTW:
-      E.TextOut(PEMRExtTextOut(R)^);
+      E.TextOut(PEMRExtTextOutW(R)^);
   EMR_SAVEDC:
     E.SaveDC;
   EMR_RESTOREDC:
@@ -9310,7 +9367,7 @@ begin
   EMR_SELECTOBJECT:
     E.SelectObjectFromIndex(PEMRSelectObject(R)^.ihObject);
   EMR_MOVETOEX: begin
-    Position := PEMRMoveToEx(R)^.ptl; // temp var to ignore unused moves
+    Position := TPoint(PEMRMoveToEx(R)^.ptl); // temp var to ignore unused moves
     if E.Canvas.FNewPath then begin
       E.Canvas.MoveToI(Position.X,Position.Y);
       Moved := true;
@@ -9322,7 +9379,7 @@ begin
     if not E.Canvas.FNewPath and not Moved then
       E.Canvas.MoveToI(Position.X,Position.Y);
     E.Canvas.LineToI(PEMRLineTo(R)^.ptl.X,PEMRLineTo(R)^.ptl.Y);
-    Position := PEMRLineTo(R)^.ptl;
+    Position := TPoint(PEMRLineTo(R)^.ptl);
     Moved := false;
     E.fInLined := true;
     if not E.Canvas.FNewPath then
@@ -9331,7 +9388,7 @@ begin
   end;
   EMR_RECTANGLE, EMR_ELLIPSE: begin
     E.NeedBrushAndPen;
-    with E.Canvas.BoxI(PEMRRectangle(R)^.rclBox,true) do
+    with E.Canvas.BoxI(TRect(PEMRRectangle(R)^.rclBox),true) do
     case R^.iType of
       EMR_RECTANGLE: E.Canvas.Rectangle(Left,Top,Width,Height);
       EMR_ELLIPSE:   E.Canvas.Ellipse(Left,Top,Width,Height);
@@ -9339,7 +9396,7 @@ begin
     E.FlushPenBrush;
   end;
   EMR_ROUNDRECT: begin
-    NormalizeRect(PEMRRoundRect(R)^.rclBox);
+    NormalizeRect(TRect(PEMRRoundRect(R)^.rclBox));
     E.NeedBrushAndPen;
     with PEMRRoundRect(R)^ do
       E.Canvas.RoundRectI(rclBox.left,rclBox.top,rclBox.right,rclBox.bottom,
@@ -9348,9 +9405,9 @@ begin
   end;
   {$ifdef USE_ARC}
   EMR_ARC: begin
-    NormalizeRect(PEMRARC(R)^.rclBox);
+    NormalizeRect(TRect(PEMRARC(R)^.rclBox));
     E.NeedPen;
-    with PEMRARC(R)^, CenterPoint(rclBox) do
+    with PEMRARC(R)^, CenterPoint(TRect(rclBox)) do
     E.Canvas.ARCI(x, y, rclBox.Right-rclBox.Left, rclBox.Bottom-rclBox.Top,
       ptlStart.x, ptlStart.y, ptlEnd.x, ptlEnd.y,
       e.dc[e.nDC].ArcDirection = AD_CLOCKWISE,
@@ -9358,11 +9415,11 @@ begin
       E.Canvas.Stroke;
    end;
   EMR_ARCTO: begin
-    NormalizeRect(PEMRARCTO(R)^.rclBox);
+    NormalizeRect(TRect(PEMRARCTO(R)^.rclBox));
     E.NeedPen;
      if not E.Canvas.FNewPath and not Moved then
       E.Canvas.MoveToI(Position.X,Position.Y);
-    with PEMRARC(R)^, CenterPoint(rclBox) do  begin
+    with PEMRARC(R)^, CenterPoint(TRect(rclBox)) do  begin
     // E.Canvas.LineTo(ptlStart.x, ptlStart.y);
     E.Canvas.ARCI(x, y, rclBox.Right-rclBox.Left, rclBox.Bottom-rclBox.Top,
       ptlStart.x, ptlStart.y, ptlEnd.x, ptlEnd.y,
@@ -9377,9 +9434,9 @@ begin
      end;
    end;
   EMR_PIE: begin
-    NormalizeRect(PEMRPie(R)^.rclBox);
+    NormalizeRect(TRect(PEMRPie(R)^.rclBox));
     E.NeedBrushAndPen;
-    with PEMRPie(R)^, CenterPoint(rclBox) do
+    with PEMRPie(R)^, CenterPoint(TRect(rclBox)) do
       E.Canvas.ARCI(x, y, rclBox.Right-rclBox.Left, rclBox.Bottom-rclBox.Top,
         ptlStart.x, ptlStart.y, ptlEnd.x, ptlEnd.y,
         e.dc[e.nDC].ArcDirection = AD_CLOCKWISE,
@@ -9389,9 +9446,9 @@ begin
         E.Canvas.FillStroke;
     end;
   EMR_CHORD: begin
-    NormalizeRect(PEMRChord(R)^.rclBox);
+    NormalizeRect(TRect(PEMRChord(R)^.rclBox));
     E.NeedBrushAndPen;
-    with PEMRChord(R)^, CenterPoint(rclBox) do
+    with PEMRChord(R)^, CenterPoint(TRect(rclBox)) do
       E.Canvas.ARCI(x, y, rclBox.Right-rclBox.Left, rclBox.Bottom-rclBox.Top,
         ptlStart.x, ptlStart.y, ptlEnd.x, ptlEnd.y,
         e.dc[e.nDC].ArcDirection = AD_CLOCKWISE,
@@ -9416,8 +9473,8 @@ begin
       for i := 1 to PEMRPolyLine(R)^.cptl-1 do
         E.Canvas.LineToI(PEMRPolyLine(R)^.aptl[i].X,PEMRPolyLine(R)^.aptl[i].Y);
       if PEMRPolyLine(R)^.cptl>0 then
-        Position := PEMRPolyLine(R)^.aptl[PEMRPolyLine(R)^.cptl-1] else
-        Position := PEMRPolyLine(R)^.aptl[0];
+        Position := TPoint(PEMRPolyLine(R)^.aptl[PEMRPolyLine(R)^.cptl-1]) else
+        Position := TPoint(PEMRPolyLine(R)^.aptl[0]);
     end else begin
       E.Canvas.MoveToI(PEMRPolyLine16(R)^.apts[0].X,PEMRPolyLine16(R)^.apts[0].Y);
       if PEMRPolyLine16(R)^.cpts>0 then begin
@@ -9452,8 +9509,8 @@ begin
         PEMRPolyBezier(R)^.aptl[i*3+2].X,PEMRPolyBezier(R)^.aptl[i*3+2].Y,
         PEMRPolyBezier(R)^.aptl[i*3+3].X,PEMRPolyBezier(R)^.aptl[i*3+3].Y);
     if PEMRPolyBezier(R)^.cptl>0 then
-      Position := PEMRPolyBezier(R)^.aptl[PEMRPolyBezier(R)^.cptl-1] else
-      Position := PEMRPolyBezier(R)^.aptl[0];
+      Position := TPoint(PEMRPolyBezier(R)^.aptl[PEMRPolyBezier(R)^.cptl-1]) else
+      Position := TPoint(PEMRPolyBezier(R)^.aptl[0]);
     Moved := false;
     if not E.Canvas.FNewPath then
       if not pen.null then
@@ -9494,7 +9551,7 @@ begin
         E.Canvas.CurveToCI(PEMRPolyBezierTo(R)^.aptl[i*3].X,PEMRPolyBezierTo(R)^.aptl[i*3].Y,
           PEMRPolyBezierTo(R)^.aptl[i*3+1].X,PEMRPolyBezierTo(R)^.aptl[i*3+1].Y,
           PEMRPolyBezierTo(R)^.aptl[i*3+2].X,PEMRPolyBezierTo(R)^.aptl[i*3+2].Y);
-      Position := PEMRPolyBezierTo(R)^.aptl[PEMRPolyBezierTo(R)^.cptl-1];
+      Position := TPoint(PEMRPolyBezierTo(R)^.aptl[PEMRPolyBezierTo(R)^.cptl-1]);
     end;
     Moved := false;
     if not E.Canvas.FNewPath then
@@ -9536,7 +9593,7 @@ begin
       if PEMRPolyLineTo(R)^.cptl>0 then begin
         for i := 0 to PEMRPolyLineTo(R)^.cptl-1 do
           E.Canvas.LineToI(PEMRPolyLineTo(R)^.aptl[i].X,PEMRPolyLineTo(R)^.aptl[i].Y);
-        Position := PEMRPolyLineTo(R)^.aptl[PEMRPolyLineTo(R)^.cptl-1];
+        Position := TPoint(PEMRPolyLineTo(R)^.aptl[PEMRPolyLineTo(R)^.cptl-1]);
       end;
     end else // EMR_POLYLINETO16
     if PEMRPolyLineTo16(R)^.cpts>0 then begin
@@ -9565,7 +9622,7 @@ begin
           E.Canvas.LineToI(PEMRPolyDraw(R)^.aptl[i].X,PEMRPolyDraw(R)^.aptl[i].Y);
           if polytypes^[i] and PT_CLOSEFIGURE<>0 then begin
             E.Canvas.LineToI(Position.X, Position.Y);
-            Position := PEMRPolyDraw(R)^.aptl[i];
+            Position := TPoint(PEMRPolyDraw(R)^.aptl[i]);
           end;
         end;
         PT_BEZIERTO: begin
@@ -9575,18 +9632,18 @@ begin
           inc(i,3);
           if polytypes^[i] and PT_CLOSEFIGURE<>0 then begin
             E.Canvas.LineToI(Position.X, Position.Y);
-            Position := PEMRPolyDraw(R)^.aptl[i];
+            Position := TPoint(PEMRPolyDraw(R)^.aptl[i]);
           end;
         end;
         PT_MOVETO: begin
           E.Canvas.MoveToI(PEMRPolyDraw(R)^.aptl[i].X,PEMRPolyDraw(R)^.aptl[i].Y);
-          Position := PEMRPolyDraw(R)^.aptl[i];
+          Position := TPoint(PEMRPolyDraw(R)^.aptl[i]);
         end;
       else break; // invalid type
       end;
       inc(i);
     end;
-    Position := PEMRPolyDraw(R)^.aptl[PEMRPolyDraw(R)^.cptl-1];
+    Position := TPoint(PEMRPolyDraw(R)^.aptl[PEMRPolyDraw(R)^.cptl-1]);
     Moved := False;
     if not E.Canvas.FNewPath then
       if not pen.null then
@@ -9712,7 +9769,7 @@ begin
   EMR_EXTSELECTCLIPRGN:
     E.ExtSelectClipRgn(@PEMRExtSelectClipRgn(R)^.RgnData[0],PEMRExtSelectClipRgn(R)^.iMode);
   EMR_INTERSECTCLIPRECT:
-    ClipRgn := E.IntersectClipRect(E.Canvas.BoxI(PEMRIntersectClipRect(r)^.rclClip,true),ClipRgn);
+    ClipRgn := E.IntersectClipRect(E.Canvas.BoxI(TRect(PEMRIntersectClipRect(r)^.rclClip),true),ClipRgn);
   EMR_SETMAPMODE:
     MappingMode := PEMRSetMapMode(R)^.iMode;
   EMR_BEGINPATH: begin
@@ -10622,18 +10679,18 @@ begin
       W := W+wW;
     if (font.align and TA_UPDATECP)=TA_UPDATECP then
       Posi := Position else
-      Posi := R.emrtext.ptlReference;
+      Posi := TPoint(R.emrtext.ptlReference);
     // detect clipping
     if Canvas.fUseMetaFileTextClipping<>tcNeverClip then begin
       with R.emrtext.rcl do
         WithClip := (Right>Left) and (Bottom>Top);
       if WithClip then
-        ClipRect := Canvas.BoxI(R.emrtext.rcl,true) else begin
+        ClipRect := Canvas.BoxI(TRect(R.emrtext.rcl),true) else begin
         if Canvas.fUseMetaFileTextClipping=tcClipExplicit then
           with R.rclBounds do
             WithClip := (Right>Left) and (Bottom>Top);
         if WithClip then
-          ClipRect := Canvas.BoxI(R.rclBounds,true) else begin
+          ClipRect := Canvas.BoxI(TRect(R.rclBounds),true) else begin
           WithClip := not ClipRgnNull and
                       (Canvas.fUseMetaFileTextClipping=tcAlwaysClip);
           if WithClip then
@@ -10647,7 +10704,7 @@ begin
         ((font.BkMode=OPAQUE) and (font.BkColor=brush.color)));
     if bOpaque then
       if WithClip then
-        backRect := R.emrtext.rcl else begin
+        backRect := TRect(R.emrtext.rcl) else begin
         backRect.TopLeft := Posi;
         backRect.BottomRight := Posi;
         inc(backRect.Right,Trunc(wW));
@@ -10685,8 +10742,8 @@ begin
       PosX := 0;
       PosY := 0;
       Canvas.SetTextMatrix(acos, asin, -asin, acos,
-        Canvas.I2X(Posi.X-Round(W*acos+H*asin)),
-        Canvas.I2Y(Posi.Y-Round(H*acos-W*asin)));
+        Canvas.I2X(Integer(Posi.X-Round(W*acos+H*asin))),
+        Canvas.I2Y(Integer(Posi.Y-Round(H*acos-W*asin))));
     end else begin
       acos := 0;
       asin := 0;
