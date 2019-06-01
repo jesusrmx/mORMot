@@ -90,7 +90,7 @@ interface
 {$I Synopse.inc} // define HASINLINE USETYPEINFO CPU32 CPU64 OWNNORMTOUPPER
 
 uses
-  Windows, Messages, SysUtils, Classes, Types, Graphics, Controls, Forms,
+  {$ifdef FPC}LCLType, {$endif}Windows, Messages, SysUtils, Classes, Types, Graphics, Controls, Forms,
   ExtCtrls, StdCtrls, ClipBrd, Menus {$ifdef UNICODE}, UITypes{$endif};
 
 const
@@ -98,7 +98,7 @@ const
     [#8, '_', '0'..'9', 'A'..'Z', 'a'..'z'];
   Separators: set of AnsiChar =
     [#0, ' ', '-', #13, #10, '.', ',', '/', '\', ':', '+', '%', '*', '(', ')',
-    ';', '=', '{', '}', '[', ']', '{', '}', '|', '!', '@', '"'];
+    ';', '=', '{', '}', '[', ']', '|', '!', '@', '"'];
   GutterRightMargin = 2;
 
   WM_EDITCOMMAND = WM_USER + $101;
@@ -817,7 +817,9 @@ type
     property align;
     property Enabled;
     property Color;
+    {$ifndef FPC}
     property Ctl3D;
+    {$endif}
     property Font;
     property ParentColor;
     property ParentFont;
@@ -836,7 +838,9 @@ type
     property ParentBiDiMode;
     property WantTabs default true;
     property WordWrap default true;
+    {$ifndef FPC}
     property OnCanResize;
+    {$endif}
     property OnConstrainedResize;
     property OnDockDrop;
     property OnDockOver;
@@ -1088,7 +1092,13 @@ function Min(x, y: integer): integer; {$ifdef HASINLINE}inline;{$endif}
 implementation
 
 uses
-  Consts, RTLConsts;
+  {$ifdef FPC}LCLStrConsts{$else}Consts, RTLConsts{$endif};
+
+{$ifdef FPC}
+resourcestring
+  SScrollBarRange = 'Invalid scrollbar range'; //TODO: is a simple const? check real wording...
+  SListIndexError = 'List index (%d) error'; //TODO: is a simple const? check real wording...
+{$endif}
 
 {$ifdef UNICODE}
 function PosEx(const SubStr, S: string; Offset: Integer = 1): Integer; inline;
@@ -1219,7 +1229,7 @@ end;
 
 const
   StIdSymbols =
-    ['_', '0'..'9', 'A'..'Z', 'a'..'z', 'А'..'Я', 'а'..'я'];
+    ['_', '0'..'9', 'A'..'Z', 'a'..'z'{$ifndef FPC}, 'ГЂ'..'Гџ', 'Г '..'Гї'{$endif}];
   _StIdSymbols =
     ['>', '<', '''', '"', '`', '!', '@', '#', '$', '%', '^', '&', '*', '/', '?'] + __Brackets + StIdSymbols + [#127..#255];
   _AutoChangePunctuation: set of AnsiChar =
@@ -2465,7 +2475,9 @@ begin
   FRightMarginVisible := true;
   FRightMargin := 80;
   FBorderStyle := bsSingle;
+  {$ifndef FPC}
   Ctl3d := true;
+  {$endif}
   Height := 40;
   Width := 150;
   ParentColor := false;
@@ -2582,13 +2594,18 @@ end;
 procedure TCustomMemoEx.CreateParams(var Params: TCreateParams);
 const
   BorderStyles: array[TBorderStyle] of cardinal = (0, WS_BORDER);
+  {$ifndef FPC}
   ScrollStyles: array[TScrollStyle] of cardinal = (0, WS_HSCROLL, WS_VSCROLL, WS_HSCROLL or WS_VSCROLL);
+  {$else}
+  ScrollStyles: array[TScrollStyle] of cardinal = (0, WS_HSCROLL, WS_VSCROLL, WS_HSCROLL or WS_VSCROLL,
+                                                      WS_HSCROLL, WS_VSCROLL, WS_HSCROLL or WS_VSCROLL);
+  {$endif}
 begin
   inherited CreateParams(Params);
   with Params do
   begin
     Style := Style or BorderStyles[FBorderStyle] or ScrollStyles[FScrollBars];
-    if NewStyleControls and Ctl3D and (FBorderStyle = bsSingle) then
+    if NewStyleControls {$ifndef FPC}and Ctl3D {$endif}and (FBorderStyle = bsSingle) then
     begin
       Style := Style and not WS_BORDER;
       ExStyle := ExStyle or WS_EX_CLIENTEDGE;
@@ -2599,7 +2616,7 @@ end;
 
 procedure TCustomMemoEx.Resize;
 begin
-  if not (csLoading in ComponentState) then
+  if not (csLoading in ComponentState) and (EditorClient<>nil) then
   begin
     UpdateEditorSize(true, false);
     Invalidate;
@@ -2621,7 +2638,7 @@ begin
   if FBorderStyle <> Value then
   begin
     FBorderStyle := Value;
-    RecreateWnd;
+    RecreateWnd{$ifdef FPC}(self){$endif};
   end;
 end;
 
@@ -3258,9 +3275,9 @@ begin
       if FParaX - str_pos >= k1 then
       begin
         old_str := System.Copy(S, str_pos + 1, FParaX - str_pos);
-        AutoChanged := GetAutoChangeWord(old_str, new_str); //  заменяем подстроку без знака?
+        AutoChanged := GetAutoChangeWord(old_str, new_str); //  Р·Р°РјРµРЅСЏРµРј РїРѕРґСЃС‚СЂРѕРєСѓ Р±РµР· Р·РЅР°РєР°?
         if not AutoChanged then
-          AutoChanged := GetAutoChangeWord(old_str + Key, new_str) //  заменяем подстроку со знаком?
+          AutoChanged := GetAutoChangeWord(old_str + Key, new_str) //  Р·Р°РјРµРЅСЏРµРј РїРѕРґСЃС‚СЂРѕРєСѓ СЃРѕ Р·РЅР°РєРѕРј?
         else
           AddKeyToNewStr := true;
         if AutoChanged then
@@ -3285,7 +3302,7 @@ begin
       AutoChanged := GetAutoChangeWord(Key, new_str);
       if AutoChanged then
       begin
-        str_pos := FParaX;  //  заменяем 1, только что введенный, знак
+        str_pos := FParaX;  //  Р·Р°РјРµРЅВ¤РµРј 1, С‚РѕР»СЊРєРѕ С‡С‚Рѕ РІРІРµРґРµРЅРЅС‹Р№, Р·РЅР°Рє
         old_str := '';
       end;
     end;
@@ -4304,12 +4321,15 @@ begin
         Invalidate;
         exit;
       end;
+    {$ifndef FPC}
+    //TODO: MouseWheelHandler
     WM_MOUSEWHEEL:
       begin
         MouseWheelHandler(Message);
         Message.Result := 0;
         exit;
       end;
+    {$endif}
     WM_SYSCHAR:
       if Message.wParam = VK_BACK then
       begin
@@ -4375,6 +4395,8 @@ begin
         Message.Result := ord(true);
         exit;
       end;
+    {$ifndef FPC}
+    //TODO: TWMChangeCBChain
     WM_CHANGECBCHAIN:
       begin
         Message.Result := 0;
@@ -4384,6 +4406,7 @@ begin
           SendMessage(NextClipViewer, WM_CHANGECBCHAIN, TWMChangeCBChain(Message).Remove, TWMChangeCBChain(Message).Next);
         exit;
       end;
+    {$endif}
     WM_DRAWCLIPBOARD:
       begin
         ClipboardChanged;
@@ -5317,7 +5340,7 @@ begin
   if FScrollBars <> Value then
   begin
     FScrollBars := Value;
-    RecreateWnd;
+    RecreateWnd{$ifdef FPC}(Self){$endif};
     UpdateEditorSize;
   end;
 end;
@@ -6093,6 +6116,7 @@ end;
 }
 constructor TUndoBuffer.Create;
 begin
+  inherited Create;
   FCancelUndo := false;
   FPtr := -1;
 end;
@@ -6464,9 +6488,9 @@ begin
   with TDeleteUndo(UndoBuffer.Items[UndoBuffer.FPtr]) do
   begin
     S := FMemoEx.FLines.Text;
-//    iBeg := FMemoEx.PosFromCaret(FSelBegX, FSelBegY); BUG car dйcalage si wordwrap
+//    iBeg := FMemoEx.PosFromCaret(FSelBegX, FSelBegY); BUG car dГ©calage si wordwrap
     Insert(Text, S, FSelOffs + 1);
-    {выделить FSelBegX, FSelBegY}
+    {РІС‹РґРµР»РёС‚СЊ FSelBegX, FSelBegY}
     FMemoEx.FLines.SetLockText(S);
     FMemoEx.FSelBlock := FSelBlock;
     FMemoEx.FSelBegX := FSelBegX;
@@ -6669,7 +6693,7 @@ begin
     if FSelected then
     begin
       if (FSelBegY <= FCaretY) or (FCaretY >= FSelEndY) then
-        // скорректировать LW ..
+        // СЃРєРѕСЂСЂРµРєС‚РёСЂРѕРІР°С‚СЊ LW ..
     end;}
     Delete(S, iBeg, iEnd - iBeg);
     Insert(S1, S, iBeg);
@@ -6999,7 +7023,9 @@ begin
   TabStop := false;
   ParentFont := false;
   Parent := Owner as TCustomMemoEx;
+  {$ifndef FPC}
   Ctl3D := false;
+  {$endif}
   FTimer := TTimer.Create(nil);
   FTimer.Enabled := false;
   FTimer.Interval := 200;
@@ -7269,7 +7295,11 @@ begin
     aPopupMenu := GetPopupMenu;
     if (aPopupMenu = nil) or not aPopupMenu.AutoPopup then
       exit;
+    {$ifdef FPC}
+    //TODO: send wm_cancelmode ??
+    {$else}
     SendCancelMode(nil);
+    {$endif}
     aPopupMenu.PopupComponent := Self;
     with ClientToScreen(CalcCellRect(FCaretX - FLeftCol, FCaretY - FTopRow).TopLeft) do
       aPopupMenu.Popup(X, Y);

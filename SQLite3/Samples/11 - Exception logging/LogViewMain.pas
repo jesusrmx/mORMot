@@ -28,7 +28,7 @@ uses
   {$WARN UNIT_PLATFORM ON}
   {$ifdef FPC}  // FPC compatibility by alf (alfred) - thanks for the patch!
   ShellCtrls,
-  SynTaskDialog in '..\..\Samples\ThirdPartyDemos\Ondrej\SynTaskDialog4Lazarus\SynTaskDialog.pas',
+  SynTaskDialog, // in '..\..\Samples\ThirdPartyDemos\Ondrej\SynTaskDialog4Lazarus\SynTaskDialog.pas',
   {$else}
   SynTaskDialog, // also fix QC 37403 for Delphi 6/7/2006
   {$endif}
@@ -46,9 +46,9 @@ type
   { TMainLogView }
 
   TMainLogView = class(TForm)
+    PanelBottom: TPanel;
     PanelLeft: TPanel;
     PanelThread: TPanel;
-    PanelBottom: TPanel;
     BtnBrowse: TButton;
     EventsList: TCheckListBox;
     FilterMenu: TPopupMenu;

@@ -8,11 +8,16 @@
       <Version Value="11"/>
       <PathDelim Value="\"/>
       <SearchPaths>
-        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\"/>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
+      <Linking>
+        <Debugging>
+          <DebugInfoType Value="dsDwarf2"/>
+        </Debugging>
+      </Linking>
     </CompilerOptions>
     <Version Major="1"/>
-    <Files Count="3">
+    <Files Count="4">
       <Item1>
         <Filename Value="SynFPCMetaFile.pas"/>
         <UnitName Value="SynFPCMetaFile"/>
@@ -25,6 +30,10 @@
         <Filename Value="SynPdf.pas"/>
         <UnitName Value="SynPdf"/>
       </Item3>
+      <Item4>
+        <Filename Value="SynMemoEx.pas"/>
+        <UnitName Value="SynMemoEx"/>
+      </Item4>
     </Files>
     <RequiredPkgs Count="3">
       <Item1>

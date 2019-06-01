@@ -1,9 +1,11 @@
 unit RemoteLogMain;
 
+{$MODE Delphi}
+
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, SynCommons, SynLog, mORMot, mORMotHttpClient;
 
 type
@@ -35,9 +37,9 @@ var
 
 implementation
 
-{$R Vista.res}
+{$R ../../../Vista.res}
 
-{$R *.dfm}
+{$R *.lfm}
 
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
