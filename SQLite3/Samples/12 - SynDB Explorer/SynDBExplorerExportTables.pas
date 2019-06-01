@@ -1,9 +1,11 @@
 unit SynDBExplorerExportTables;
 
+{$MODE Delphi}
+
 interface
 
 uses
-  Windows, Messages, SysUtils, CheckLst, Controls, StdCtrls, Classes, Graphics,
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, CheckLst, Controls, StdCtrls, Classes, Graphics,
   Forms, ExtCtrls, mORMotUILogin,
   SynZip, SynCommons, SynDB, SynTable, SynDBSQLite3;
 
@@ -30,7 +32,7 @@ var
 
 implementation
 
-{$R *.dfm}
+{$R *.lfm}
 
 resourcestring
   sTableExportWhereHint = 'e.g. "ID>1000" or "RowNum<=500"';

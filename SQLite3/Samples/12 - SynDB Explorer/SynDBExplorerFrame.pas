@@ -1,11 +1,13 @@
 unit SynDBExplorerFrame;
 
+{$MODE Delphi}
+
 {$I Synopse.inc} // define HASINLINE USETYPEINFO CPU32 CPU64 OWNNORMTOUPPER
 
 interface
 
 uses
-  Windows,
+  LCLIntf, LCLType, LMessages,
   Messages,
   SysUtils,
   Classes,
@@ -18,13 +20,12 @@ uses
   ExtCtrls,
   ComCtrls,
   Types,
-  ShellAPI,
   Menus,
   {$ifdef ISDELPHIXE3} System.UITypes, {$endif}
   SynCommons,
   SynDB,
   mORMot,
-  mORMoti18n,
+  //mORMoti18n,
   mORMotUI,
   mORMotUILogin,
   mORMotToolBar,
@@ -126,7 +127,7 @@ uses
   SynDBExplorerServer;
 
 
-{$R *.dfm}
+{$R *.lfm}
 
 function RowsToSynBigTableRecord(const Dest: TFileName; Rows: TSQLDBStatement;
   VariableLength: boolean): integer;
@@ -297,7 +298,7 @@ var SQL, Stop: RawUTF8;
     Frame: TDBExplorerFrame;
 begin
   FreeAndNil(fGrid);
-  DrawGrid.RowCount := 0;
+  DrawGrid.RowCount := DrawGrid.FixedRows;
   SelStart := MemoSQL.SelStart;
   SelLength := MemoSQL.SelLength;
   if SelLength>10 then
@@ -558,7 +559,7 @@ begin
       Screen.Cursor := crDefault;
       Free;
     end;
-    ShellExecute(Form.Handle,nil,pointer(FileName),nil,nil,SW_SHOWNORMAL);
+     OpenDocument(FileName); { *Converted from ShellExecute* }
   finally
     Free;
   end;
@@ -663,8 +664,10 @@ end;
 procedure TDBExplorerFrame.ImageLogoClick(Sender: TObject);
 begin
 {$WARNINGS OFF}
+  {$ifndef FPC}
   if DebugHook=0 then
-    ShellExecute(0,nil,'https://synopse.info',nil,nil,SW_SHOWNORMAL);
+  {$endif}
+    OpenURL('https://synopse.info'); { *Converted from ShellExecute* }
 {$WARNINGS ON}
 end;
 

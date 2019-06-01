@@ -1,9 +1,11 @@
 unit SynDBExplorerServer;
 
+{$MODE Delphi}
+
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ExtCtrls, SynCommons, SynDB, SynDBRemote;
 
 type
@@ -33,7 +35,7 @@ implementation
 uses
   mORMotUILogin; // for ShowMessage()
   
-{$R *.dfm}
+{$R *.lfm}
 
 procedure THTTPServerForm.lbledtPortKeyPress(Sender: TObject;
   var Key: Char);

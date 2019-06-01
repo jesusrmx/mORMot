@@ -1,5 +1,7 @@
 unit SynDBExplorerMain;
 
+{$MODE Delphi}
+
 {$I Synopse.inc} // define HASINLINE USETYPEINFO CPU32 CPU64 OWNNORMTOUPPER
 
 interface
@@ -7,7 +9,7 @@ interface
 {.$define USEZEOS}
 
 uses
-  Windows,
+  LCLIntf, LCLType, LMessages,
   Messages,
   SysUtils,
   Variants,
@@ -103,7 +105,7 @@ uses
   {$R Vista.res}
 {$endif}
 
-{$R *.dfm}
+{$R *.lfm}
 
 procedure TDbExplorerMain.FormDestroy(Sender: TObject);
 begin
@@ -229,7 +231,11 @@ begin
       CmdLine := ctSqlite3 else
     if TSQLDataBase.IsBackupSynLZFile(FN) then begin
       FN2 := ExtractFileName(FN);
+      {$ifdef FPC}
+      TempFileName := GetTempDir;
+      {$else}
       SetString(TempFileName, tmp, GetTempPath(SizeOf(tmp), tmp));
+      {$endif}
       TempFileName := TempFileName+FN2+'.db';
       DeleteFile(TempFileName);
       with CreateTempForm(format(sPleaseWaitSynLz,[FN2]),nil,True) do
@@ -373,8 +379,11 @@ end;
 
 procedure TDbExplorerMain.PageChange(Sender: TObject);
 begin
-  if Page.ActivePage=PageNew then
+  if Page.ActivePage=PageNew then begin
+    Page.OnChange := nil;
     CreateFrame;
+    Page.OnChange := PageChange;
+  end;
 end;
 
 procedure TDbExplorerMain.PageDblClick(Sender: TObject);

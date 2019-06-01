@@ -1,9 +1,11 @@
 unit SynDBExplorerQueryBuilder;
 
+{$MODE Delphi}
+
 interface
 
 uses
-  Windows, Messages, SysUtils, CheckLst, Controls, StdCtrls, Classes, Types,
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, CheckLst, Controls, StdCtrls, Classes, Types,
   Graphics, Forms, Clipbrd,
   SynDB, SynCommons, SynTable, Menus;
 
@@ -88,7 +90,7 @@ resourcestring
 
 implementation
 
-{$R *.dfm}
+{$R *.lfm}
 
 { TDBQueryTable }
 

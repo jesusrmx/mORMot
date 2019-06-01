@@ -1,5 +1,7 @@
 unit SynDBExplorerClasses;
 
+{$MODE Delphi}
+
 interface
 
 uses
