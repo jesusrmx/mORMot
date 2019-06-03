@@ -1,6 +1,8 @@
 /// some common definitions shared by both client and server side
 unit Project14Interface;
 
+{$MODE Delphi}
+
 interface
 
 type

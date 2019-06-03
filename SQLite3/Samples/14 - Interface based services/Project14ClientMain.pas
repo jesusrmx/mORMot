@@ -1,5 +1,7 @@
 unit Project14ClientMain;
 
+{$MODE Delphi}
+
 {
 
  By definition, you need the proper server to run:
@@ -45,7 +47,7 @@ var
 
 implementation
 
-{$R *.dfm}
+{$R *.lfm}
 
 {$ifndef FPC}
 {$R Vista.res}

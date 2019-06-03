@@ -1,6 +1,8 @@
 /// some common definitions shared by both client and server side 
 unit Project16Interface;
 
+{$MODE Delphi}
+
 interface
 
 uses

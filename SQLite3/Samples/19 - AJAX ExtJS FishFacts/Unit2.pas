@@ -1,10 +1,12 @@
 unit Unit2;
 
+{$MODE Delphi}
+
 interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ShellAPI,
+  Dialogs, StdCtrls,
   SynCommons, SynLog, SynZip, SynCrtSock,
   mORMot, mORMotSQLite3, SynSQLite3Static, mORMotHttpServer;
 
@@ -57,7 +59,7 @@ var
 
 implementation
 
-{$R *.dfm}
+{$R *.lfm}
 
 
 { TForm1 }
@@ -121,8 +123,7 @@ end;
 
 procedure TForm1.btnOpenBrowserClick(Sender: TObject);
 begin
-  ShellExecute(0,'open',pointer(ExtractFilePath(ParamStr(0))+'html5\index.html'),
-    nil,nil,SW_SHOWNORMAL);
+  ShellExecute(0,'open',pointer(ExtractFilePath(ParamStr(0))+'html5\index.html'),    nil,nil,SW_SHOWNORMAL);
 end;
 
 end.

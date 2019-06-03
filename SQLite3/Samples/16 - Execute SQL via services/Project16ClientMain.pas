@@ -1,9 +1,11 @@
 unit Project16ClientMain;
 
+{$MODE Delphi}
+
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls,
   SynCommons, mORMot, mORMotHttpClient, mORMotUI, mORMotUILogin,
   Project16Interface, ExtCtrls, Grids;
@@ -62,9 +64,9 @@ var
 
 implementation
 
-{$R *.dfm}
+{$R *.lfm}
 
-{$R Vista.res}
+{$R ../../../Vista.res}
 
 function TMainForm.Execute(FormatSQLWhere: PUTF8Char;
   const BoundsSQLWhere: array of const): TSQLTableJSON;

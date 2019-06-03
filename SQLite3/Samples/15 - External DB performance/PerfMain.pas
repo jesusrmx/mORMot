@@ -1,5 +1,7 @@
 unit PerfMain;
 
+{$MODE Delphi}
+
 interface
 
 {$I Synopse.inc}
@@ -28,8 +30,8 @@ interface
 {$endif}
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, Contnrs, ShellApi,
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, Contnrs,
   SynCommons,
   mORMot, mORMotSQLite3, mORMotDB,
   SynDB, SynDBSQLite3, SynDBOracle, SynOleDB, SynDBODBC, SynDBDataSet,
@@ -96,7 +98,7 @@ implementation
 
 uses DateUtils;
 
-{$R *.dfm}
+{$R *.lfm}
 
 // if defined, will create two "stored false" properties, to test UNIQUE columns
 {.$define UNIK}
@@ -935,7 +937,7 @@ procedure TMainForm.FormShow(Sender: TObject);
 var Valid: boolean;
     S: RawUTF8;
 begin
-  btnReport.Visible := DebugHook=0;
+  btnReport.Visible := {$ifdef FPC}true{$else}DebugHook=0{$endif};
   exit;
   S := StringFromFile('PerfTestBlog.stats');
   JSONToObject(Stats,pointer(S),Valid,TStat);
@@ -947,7 +949,7 @@ end;
 
 procedure TMainForm.btnReportClick(Sender: TObject);
 begin
-  ShellExecute(0,'open',pointer(ChangeFileExt(ExeVersion.ProgramFileName,'.htm')),'','',SW_SHOWMAXIMIZED);
+   OpenDocument(ChangeFileExt(ExeVersion.ProgramFileName,'.htm')); { *Converted from ShellExecute* }
 end;
 
 end.
