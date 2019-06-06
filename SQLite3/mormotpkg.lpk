@@ -13,7 +13,7 @@
       </SearchPaths>
     </CompilerOptions>
     <Version Major="1"/>
-    <Files Count="23">
+    <Files Count="24">
       <Item1>
         <Filename Value="mORMot.pas"/>
         <UnitName Value="mORMot"/>
@@ -106,6 +106,10 @@
         <Filename Value="mORMotWrappers.pas"/>
         <UnitName Value="mORMotWrappers"/>
       </Item23>
+      <Item24>
+        <Filename Value="SynSelfTests.pas"/>
+        <UnitName Value="SynSelfTests"/>
+      </Item24>
     </Files>
     <RequiredPkgs Count="2">
       <Item1>

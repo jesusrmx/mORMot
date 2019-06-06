@@ -1,9 +1,11 @@
 unit Project20ClientMain;
 
+{$MODE Delphi}
+
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls,
   SynCommons, mORMot, mORMotHttpClient,
   Project20Interface;
@@ -36,7 +38,7 @@ var
 
 implementation
 
-{$R *.dfm}
+{$R *.lfm}
 
 {$ifndef FPC}
 {$R Vista.res}

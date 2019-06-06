@@ -1,9 +1,11 @@
 unit Project21HttpClientMain;
 
+{$MODE Delphi}
+
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ExtCtrls;
 
 type
@@ -37,7 +39,7 @@ uses
   mORMot,
   SynSelfTests;
 
-{$R *.dfm}
+{$R *.lfm}
 
 procedure TMainForm.lbledtClientPerThreadInstanceCountKeyPress(
   Sender: TObject; var Key: Char);

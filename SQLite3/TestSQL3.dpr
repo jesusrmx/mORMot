@@ -112,7 +112,6 @@ uses
         mORMotFastCgiServer in 'mORMotFastCgiServer.pas',
         //mORMotBigTable,
       {$endif FPC}
-      ECCProcess in 'Samples\33 - ECC\ECCProcess.pas',
     {$endif DELPHI5OROLDER}
     {$ifndef LVCL}
       {$ifdef FPC}
@@ -131,7 +130,6 @@ uses
       {$ifndef DELPHI5OROLDER}
       {$endif DELPHI5OROLDER}
     {$endif LVCL}
-    SynSelfTests in '..\SynSelfTests.pas',
     mORMotSelfTests in 'mORMotSelfTests.pas';
   {$endif KYLIX3}
 
