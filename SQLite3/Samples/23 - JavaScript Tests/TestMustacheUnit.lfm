@@ -1,0 +1,154 @@
+object MainForm: TMainForm
+  Left = 174
+  Height = 552
+  Top = 123
+  Width = 1023
+  Caption = ' Test Mustache libraries: native SynMustache vs JavaScript/SpiderMonkey'
+  ClientHeight = 552
+  ClientWidth = 1023
+  Color = clBtnFace
+  Constraints.MinHeight = 400
+  Constraints.MinWidth = 980
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  OnDestroy = FormDestroy
+  OnShow = FormShow
+  Position = poScreenCenter
+  LCLVersion = '2.1.0.0'
+  object lblTemplate: TLabel
+    Left = 16
+    Height = 13
+    Top = 8
+    Width = 44
+    Caption = 'Template'
+    ParentColor = False
+  end
+  object lblContext: TLabel
+    Left = 16
+    Height = 13
+    Top = 264
+    Width = 39
+    Caption = 'Context'
+    ParentColor = False
+  end
+  object lblIteration: TLabel
+    Left = 584
+    Height = 13
+    Top = 40
+    Width = 102
+    Caption = 'Number of iterations:'
+    ParentColor = False
+  end
+  object mmoTemplate: TMemo
+    Left = 8
+    Height = 233
+    Top = 24
+    Width = 537
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Consolas'
+    Lines.Strings = (
+      '{{! taken from http://boilingplastic.com/using-mustache-templates-for-javascript-practical-examples}}'
+      ''
+      '<h2>Example 6 : Recursively binding data to templates</h2>'
+      ''
+      '    <h3>Organization Structure</h3>'
+      '    {{> person}}'
+      ''
+      '{{<person}}'
+      '    <div>'
+      '        <b>{{name}}</b> ({{title}})'
+      '        <div style=''padding-left: 15px; padding-top: 5px;''>'
+      '            {{#manages}}'
+      '                {{>person}}'
+      '            {{/manages}}'
+      '        </div>'
+      '    </div> '
+      '{{/person}}'
+    )
+    ParentFont = False
+    ScrollBars = ssVertical
+    TabOrder = 0
+    WordWrap = False
+  end
+  object mmoContext: TMemo
+    Left = 8
+    Height = 226
+    Top = 280
+    Width = 537
+    Anchors = [akTop, akLeft, akBottom]
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Consolas'
+    Lines.Strings = (
+      ' { title : "President", name : "Perry President", manages : ['
+      '        { title : "CTO", name : "Janet TechOff", manages : ['
+      '            { title : "Web Architect", name : "Hari Archie", manages : ['
+      '                { title : "Senior Developer", name : "Brenda Senior", manages : []},'
+      '                { title : "Developer", name : "Roger Develo", manages : []},'
+      '                { title : "Junior Developer", name : "Jerry Junior", manages : []}'
+      '            ]}'
+      '        ]},   '
+      '        { title : "HRO", name : "Harold HarOff", manages : ['
+      '            { title : "HR Officer", name : "Susan McHorror", manages : []},'
+      '            { title : "HR Auditor", name : "Audrey O''Fae", manages : []}'
+      '        ]}'
+      ']}'
+    )
+    ParentFont = False
+    ScrollBars = ssVertical
+    TabOrder = 1
+    WordWrap = False
+  end
+  object btnExecSynMustache: TButton
+    Left = 576
+    Height = 49
+    Top = 64
+    Width = 121
+    Caption = 'Render with SynMustache'
+    OnClick = Render
+    TabOrder = 2
+  end
+  object btnExecSpiderMonkey: TButton
+    Left = 712
+    Height = 49
+    Top = 64
+    Width = 121
+    Caption = 'Render with  mustache.js'
+    OnClick = Render
+    TabOrder = 3
+  end
+  object mmoResult: TMemo
+    Left = 560
+    Height = 378
+    Top = 128
+    Width = 417
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Consolas'
+    ParentFont = False
+    ScrollBars = ssVertical
+    TabOrder = 4
+    WordWrap = False
+  end
+  object btnOpenBrowser: TButton
+    Left = 872
+    Height = 25
+    Top = 102
+    Width = 105
+    Anchors = [akTop, akRight]
+    Caption = 'Show in Browser'
+    OnClick = btnOpenBrowserClick
+    TabOrder = 5
+  end
+  object edtIteration: TEdit
+    Left = 691
+    Height = 21
+    Top = 38
+    Width = 70
+    TabOrder = 6
+    Text = '10000'
+  end
+end

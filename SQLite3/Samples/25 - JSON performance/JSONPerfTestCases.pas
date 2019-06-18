@@ -1,6 +1,8 @@
 /// benchmarks of JSON process, using several librairies (including mORMot)
 unit JSONPerfTestCases;
 
+{$MODE DELPHI}
+
 interface
 
 {$I Synopse.inc}
@@ -427,6 +429,10 @@ begin
   {$endif}
   for i := 1 to SAMPLE_JSON_1_COUNT do begin
     json := SAMPLE_JSON_1;
+    {$IFDEF FPC}
+    // ref: https://wiki.freepascal.org/User_Changes_3.0#Literal_storage_memory_has_been_made_read-only
+    UniqueString(json);
+    {$ENDIF}
     RecordLoadJSON(gloss,@json[1],TypeInfo(TGlossary));
     Check(gloss.glossary.title='example glossary');
   end;
@@ -438,6 +444,10 @@ var gloss: TGlossary;
     json: RawUTF8;
 begin
   json := SAMPLE_JSON_1;
+  {$IFDEF FPC}
+  // ref: https://wiki.freepascal.org/User_Changes_3.0#Literal_storage_memory_has_been_made_read-only
+  UniqueString(json);
+  {$ENDIF}
   RecordLoadJSON(gloss,@json[1],TypeInfo(TGlossary));
   Owner.TestTimer.Start;
   for i := 1 to SAMPLE_JSON_1_COUNT do begin
@@ -452,6 +462,10 @@ var gloss: TGlossary;
     json: RawUTF8;
 begin
   json := SAMPLE_JSON_1;
+  {$IFDEF FPC}
+  // ref: https://wiki.freepascal.org/User_Changes_3.0#Literal_storage_memory_has_been_made_read-only
+  UniqueString(json);
+  {$ENDIF}
   RecordLoadJSON(gloss,@json[1],TypeInfo(TGlossary));
   Owner.TestTimer.Start;
   for i := 1 to SAMPLE_JSON_1_COUNT do begin
@@ -1353,7 +1367,8 @@ procedure TTestDepthContent.DownloadFilesIfNecessary;
 begin
   fRunConsoleOccurenceNumber := 3315; // line numbers in file
   fFileName := 'sample.json';
-  fDownloadURI := 'https://json-test-suite.googlecode.com/files/sample.zip';
+  //fDownloadURI := 'https://json-test-suite.googlecode.com/files/sample.zip';
+  fDownloadURI := 'https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/json-test-suite/sample.zip';
   fZipFileName := 'sample.json';
   inherited; // perform the download
 end;
@@ -1514,7 +1529,14 @@ begin
     Setlength(fFileName,i);
     if FileExists(fFileName+'exe\people.json') then
       fFileName := fFileName+'exe\people.json' else
+      {$ifdef FPC}
+      {$ifdef CPU64}
+      {$else}
+      fFileName := fFileName+'fpc\bin\i386-win32\people.json'
+      {$endif}
+      {$else}
       fFileName  := fFileName+'people.json'
+      {$endif}
   end;
   fRunConsoleOccurenceNumber := 8228; // row numbers in file
   if not FileExists(fFileName) then

@@ -1677,6 +1677,10 @@ begin
     SetVariant(cx,PVariant(VPointer)^) else
   if VType=varByRef or varOleStr then
     SetWideString(cx,PWideString(VAny)^) else
+  if VType=varByRef or varstring then
+    SetAnsiChar(cx,pchar(PRawbyteString(tvardata(Value).vany)^),length(PRawByteString(VAny)^),
+      {$ifndef HASVARUSTRING} CP_UTF8
+      {$else}                 StringCodePage(PRawByteString(VAny)^){$endif}) else
   {$ifdef HASVARUSTRING}
   if VType=varByRef or varUString then
     SetSynUnicode(cx,PUnicodeString(VAny)^) else

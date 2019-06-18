@@ -8,12 +8,12 @@
       <Version Value="11"/>
       <PathDelim Value="\"/>
       <SearchPaths>
-        <OtherUnitFiles Value="DDD\dom;DDD\infra"/>
+        <OtherUnitFiles Value="DDD\dom;DDD\infra;..\CrossPlatform"/>
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
     <Version Major="1"/>
-    <Files Count="24">
+    <Files Count="30">
       <Item1>
         <Filename Value="mORMot.pas"/>
         <UnitName Value="mORMot"/>
@@ -110,6 +110,30 @@
         <Filename Value="SynSelfTests.pas"/>
         <UnitName Value="SynSelfTests"/>
       </Item24>
+      <Item25>
+        <Filename Value="..\CrossPlatform\SynCrossPlatformCrypto.pas"/>
+        <UnitName Value="SynCrossPlatformCrypto"/>
+      </Item25>
+      <Item26>
+        <Filename Value="..\CrossPlatform\SynCrossPlatformJSON.pas"/>
+        <UnitName Value="SynCrossPlatformJSON"/>
+      </Item26>
+      <Item27>
+        <Filename Value="..\CrossPlatform\SynCrossPlatformREST.pas"/>
+        <UnitName Value="SynCrossPlatformREST"/>
+      </Item27>
+      <Item28>
+        <Filename Value="..\CrossPlatform\SynCrossPlatformSpecific.pas"/>
+        <UnitName Value="SynCrossPlatformSpecific"/>
+      </Item28>
+      <Item29>
+        <Filename Value="..\CrossPlatform\SynCrossPlatformSynLZ.pas"/>
+        <UnitName Value="SynCrossPlatformSynLZ"/>
+      </Item29>
+      <Item30>
+        <Filename Value="..\CrossPlatform\SynCrossPlatformTests.pas"/>
+        <UnitName Value="SynCrossPlatformTests"/>
+      </Item30>
     </Files>
     <RequiredPkgs Count="2">
       <Item1>

@@ -1,11 +1,13 @@
 unit TestMustacheUnit;
 
+{$MODE Delphi}
+
 interface
 
 {$I Synopse.inc} // define HASINLINE USETYPEINFO CPU32 CPU64 OWNNORMTOUPPER
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls,
   SynCrtSock,
   {$ifndef CPU64} // SpiderMonkey library is not available yet in 64 bit
@@ -45,10 +47,8 @@ var
 
 implementation
 
-uses
-  ShellAPI;
 
-{$R *.dfm}
+{$R *.lfm}
 
 {$ifndef FPC}
 {$R Vista.res}
@@ -101,14 +101,14 @@ begin
   {$endif}
     exit;
   mmoResult.Lines.Text :=
-    Format('Rendered %d times in %s (%d/sec):'#13#10#13#10'%s',
-      [n,Timer.Stop,Timer.PerSec(n),result]);
+    Format('Rendered %d times in %s (%d/sec)'#13#10'using %s:'#13#10#13#10'%s',
+      [n,Timer.Stop,Timer.PerSec(n),TButton(Sender).Caption,result]);
   FileFromString(Result,ChangeFileExt(ExeVersion.ProgramFileName,'.html'));
 end;
 
 procedure TMainForm.btnOpenBrowserClick(Sender: TObject);
 begin
-  ShellExecute(0,'open',Pointer(ChangeFileExt(ExeVersion.ProgramFileName,'.html')),nil,nil,SW_SHOWNORMAL);
+   OpenDocument(ChangeFileExt(ExeVersion.ProgramFileName,'.html')); { *Converted from ShellExecute* }
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);

@@ -13401,7 +13401,14 @@ const
 
   /// this variant type will map the current SynUnicode type
   // - depending on the compiler version
+  {$ifdef FPC}
+  // FPC DoVarCopyComplex do not handle varUString which end in generating
+  // Invalid Variant exception, instead of undefining HASVARUSTRING for FPC
+  // just force to use varOleStr for varSynUnicode in this single instance.
+  varSynUnicode = varOleStr;
+  {$else}
   varSynUnicode = {$ifdef HASVARUSTRING}varUString{$else}varOleStr{$endif};
+  {$endif}
 
   /// this variant type will map the current string type
   // - depending on the compiler version
