@@ -1,5 +1,7 @@
 unit RESTModel;
 
+{$MODE Delphi}
+
 interface
 
 uses
