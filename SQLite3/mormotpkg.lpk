@@ -144,6 +144,7 @@
       </Item2>
     </RequiredPkgs>
     <UsageOptions>
+      <IncludePath Value="..\CrossPlatform"/>
       <UnitPath Value="$(PkgOutDir)"/>
     </UsageOptions>
     <PublishOptions>

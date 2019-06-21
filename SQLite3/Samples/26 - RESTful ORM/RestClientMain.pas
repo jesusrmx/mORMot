@@ -1,9 +1,11 @@
 unit RestClientMain;
 
+{$MODE Delphi}
+
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs,
   SynCommons,
   mORMot,
@@ -37,7 +39,7 @@ var
 
 implementation
 
-{$R *.dfm}
+{$R *.lfm}
 
 procedure TMainForm.FormCreate(Sender: TObject);
 begin

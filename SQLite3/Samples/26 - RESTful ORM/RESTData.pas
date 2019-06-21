@@ -1,5 +1,7 @@
 unit RESTData;
 
+{$MODE Delphi}
+
 {$I Synopse.inc} // define HASINLINE and some FPC-specific options
 
 interface

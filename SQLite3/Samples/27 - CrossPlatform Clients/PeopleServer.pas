@@ -1,5 +1,7 @@
 unit PeopleServer;
 
+{$MODE Delphi}
+
 interface
 
 {$define TESTRECORD}
@@ -215,9 +217,9 @@ begin
     // in all cases, client will call DropTable method-based service
   AddToServerWrapperMethod(DB,['..\..\..\CrossPlatform\templates',
                                 '..\..\..\..\CrossPlatform\templates']);
-  {$ifndef FPC}
+  {.$ifndef FPC}
   DB.ServiceRegister(TServiceCalculator,[TypeInfo(ICalculator)],sicShared);
-  {$endif}
+  {.$endif}
 end;
 
 procedure StopServer;
