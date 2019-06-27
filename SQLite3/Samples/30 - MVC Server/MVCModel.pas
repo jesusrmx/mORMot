@@ -1,6 +1,8 @@
 /// database Model for the MVCServer BLOG sample
 unit MVCModel;
 
+{$MODE Delphi}
+
 {$I Synopse.inc} // define HASINLINE WITHLOG ONLYUSEHTTPSOCKET
 
 interface

@@ -1,6 +1,8 @@
 /// ViewModel/Control interfaces for the MVCServer BLOG sample
 unit MVCViewModel;
 
+{$MODE Delphi}
+
 {$I Synopse.inc} // define HASINLINE WITHLOG ONLYUSEHTTPSOCKET
 
 interface
