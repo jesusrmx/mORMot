@@ -2526,7 +2526,11 @@ type
     tkSet,tkMethod,tkSString,tkLString,tkAString,
     tkWString,tkVariant,tkArray,tkRecord,tkInterface,
     tkClass,tkObject,tkWChar,tkBool,tkInt64,tkQWord,
-    tkDynArray,tkInterfaceRaw,tkProcVar,tkUString,tkUChar,tkHelper);
+    tkDynArray,tkInterfaceRaw,tkProcVar,tkUString,tkUChar,tkHelper
+    {$if FPC_FULLVERSION >= 30301}
+    ,tkFile, tkClassRef, tkPointer
+    {$endif}
+    );
 const
   // maps record or object types
   tkRecordTypes = [tkObject,tkRecord];
@@ -52562,6 +52566,11 @@ var Added: boolean;
         end;
       end;
       // tkString (shortstring) and tkInterface is not handled
+      {$ifdef FPC}{$if FPC_FULLVERSION >= 30301}
+      tkClassRef:
+      begin
+      end;
+      {$endif}{$endif}
     end;
     if Added then
       Add(',');
