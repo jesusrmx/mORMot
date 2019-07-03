@@ -56,6 +56,13 @@ begin
       'c:\Users\Jesus\Desktop\tools\flamerobin_emb\fbembed.dll',false),
       'MVCServerFirebird.fdb','sysdba','masterkey');
     aExternalDB.ThreadingMode := tmMainConnection; // as expected for FB embedded
+    aExternalDB.BatchMaxSentAtOnce := 14; // max number of article inserts before it fails with:
+                                          // "SQL Error:  Dynamic SQL Error SQL error code = -204
+                                          //Implementation limit exceeded block size exceeds implementation restriction."
+                                          // mORMot has provision for limiting the number of statements that it can send
+                                          // to the db engine, but, apparently, it has not way to set a limit in the
+                                          // the max number of bytes that the engine supports per batch. For firebird
+                                          // it is 64K
     {$endif}
     {$ifdef USEFIREDACFIREBIRD}
     aDriver := TADPhysIBDriverLink.Create(nil);
