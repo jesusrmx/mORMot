@@ -1,5 +1,7 @@
 unit Project31ChatCallbackInterface;
 
+{$MODE Delphi}
+
 interface
 
 uses
