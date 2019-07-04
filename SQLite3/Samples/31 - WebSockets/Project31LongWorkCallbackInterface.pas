@@ -1,5 +1,7 @@
 unit Project31LongWorkCallbackInterface;
 
+{$MODE Delphi}
+
 interface
 
 uses
