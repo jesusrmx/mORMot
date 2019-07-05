@@ -1,5 +1,7 @@
 unit ECCProcess;
 
+{$MODE Delphi}
+
 (*
     This file is part of Synopse framework.
 
