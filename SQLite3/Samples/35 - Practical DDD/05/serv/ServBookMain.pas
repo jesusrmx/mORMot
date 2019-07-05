@@ -9,6 +9,7 @@ uses
   SysUtils,
   Classes,
   SynCommons,
+  SynTable,
   mORMot,
   SynSQLite3,
   mORMotSQLite3,
