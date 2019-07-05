@@ -1,6 +1,8 @@
 // type definitions shared by the Clients and Servers
 unit ServFishShopTypes;
 
+{$MODE Delphi}
+
 {$I Synopse.inc} // define HASINLINE USETYPEINFO CPU32 CPU64 OWNNORMTOUPPER
 
 interface

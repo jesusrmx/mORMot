@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
-    <Version Value="11"/>
+    <Version Value="12"/>
     <General>
       <Flags>
         <MainUnitHasCreateFormStatements Value="False"/>
         <MainUnitHasTitleStatement Value="False"/>
         <MainUnitHasScaledStatement Value="False"/>
+        <CompatibilityMode Value="True"/>
       </Flags>
       <SessionStorage Value="InProjectDir"/>
-      <MainUnit Value="0"/>
       <Title Value="RESTBenchmark"/>
       <UseAppBundle Value="False"/>
       <ResourceType Value="res"/>
@@ -25,9 +25,17 @@
       <FormatVersion Value="2"/>
       <Modes Count="0"/>
     </RunParams>
+    <RequiredPackages Count="2">
+      <Item1>
+        <PackageName Value="MormotPkg"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="LCL"/>
+      </Item2>
+    </RequiredPackages>
     <Units Count="1">
       <Unit0>
-        <Filename Value="RESTBenchmark.dpr"/>
+        <Filename Value="RESTBenchmark.lpr"/>
         <IsPartOfProject Value="True"/>
       </Unit0>
     </Units>
@@ -38,8 +46,7 @@
       <Filename Value="RESTBenchmark"/>
     </Target>
     <SearchPaths>
-      <IncludeFiles Value="../..;../../..;$(ProjOutDir;$(ProjOutDir)"/>
-      <OtherUnitFiles Value="../..;../../.."/>
+      <IncludeFiles Value="$(ProjOutDir)"/>
       <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
   </CompilerOptions>

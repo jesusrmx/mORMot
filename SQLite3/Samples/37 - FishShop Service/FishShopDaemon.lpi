@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
-    <Version Value="11"/>
+    <Version Value="12"/>
     <PathDelim Value="\"/>
     <General>
       <Flags>
         <MainUnitHasCreateFormStatements Value="False"/>
         <MainUnitHasTitleStatement Value="False"/>
+        <CompatibilityMode Value="True"/>
       </Flags>
       <SessionStorage Value="InProjectDir"/>
-      <MainUnit Value="0"/>
       <UseAppBundle Value="False"/>
       <ResourceType Value="res"/>
     </General>
@@ -256,22 +256,37 @@
         <Mode0 Name="default"/>
       </Modes>
     </RunParams>
-    <Units Count="1">
+    <RequiredPackages Count="2">
+      <Item1>
+        <PackageName Value="MormotPkg"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="LCL"/>
+      </Item2>
+    </RequiredPackages>
+    <Units Count="3">
       <Unit0>
-        <Filename Value="FishShopDaemon.dpr"/>
+        <Filename Value="FishShopDaemon.lpr"/>
         <IsPartOfProject Value="True"/>
       </Unit0>
+      <Unit1>
+        <Filename Value="ServFishShopTypes.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="ServFishShopMain.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit2>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
     <Version Value="11"/>
     <Target>
-      <Filename Value="exe/FishShopDaemon"/>
+      <Filename Value="FishShopDaemon"/>
     </Target>
     <SearchPaths>
-      <IncludeFiles Value="$(ProjOutDir);../../../lib;../../../lib/SQLite3"/>
-      <Libraries Value="../../../lib/static/$(TargetCPU)-$(TargetOS)"/>
-      <OtherUnitFiles Value="../../../lib;../../../lib/SQLite3;../../../lib/SQLite3/DDD/infra;../data;../serv;../daemon"/>
+      <IncludeFiles Value="../../../lib;$(ProjOutDir)"/>
+      <OtherUnitFiles Value="../../../lib"/>
       <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
   </CompilerOptions>
