@@ -1,6 +1,8 @@
 /// Booking server implementation
 unit ServBookMain;
 
+{$MODE Delphi}
+
 interface
 
 uses

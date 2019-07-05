@@ -1,6 +1,8 @@
 /// Conference Domain services interfaces definition
 unit DomConferenceInterfaces;
 
+{$MODE Delphi}
+
 interface
 
 uses

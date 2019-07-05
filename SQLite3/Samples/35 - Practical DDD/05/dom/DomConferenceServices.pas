@@ -1,6 +1,8 @@
 /// Conference Domain services implementation
 unit DomConferenceServices;
 
+{$MODE Delphi}
+
 interface
 
 uses

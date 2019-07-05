@@ -1,6 +1,8 @@
 /// Conference Domain dependencies interface definition
 unit DomConferenceDepend;
 
+{$MODE Delphi}
+
 interface
 
 uses

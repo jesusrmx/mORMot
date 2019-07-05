@@ -1,6 +1,8 @@
 /// unit tests for the Booking server
 unit ServBookTest;
 
+{$MODE Delphi}
+
 interface
 
 uses

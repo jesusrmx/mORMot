@@ -1,6 +1,8 @@
 /// Conference Domain unit tests
 unit DomConferenceTest;
 
+{$MODE Delphi}
+
 interface
 
 uses

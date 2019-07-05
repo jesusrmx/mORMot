@@ -1,6 +1,8 @@
 /// Conference Repository implementation
 unit InfraConferenceRepository;
 
+{$MODE Delphi}
+
 interface
 
 uses

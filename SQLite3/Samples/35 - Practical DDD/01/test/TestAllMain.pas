@@ -1,5 +1,7 @@
 unit TestAllMain;
 
+{$MODE Delphi}
+
 interface
 
 uses
