@@ -1133,6 +1133,10 @@ begin
     raise ESynException.Create('You should inherit from TSynTests');
   {$ifdef MSWINDOWS}
   AllocConsole;
+  {$ifdef FPC}
+  IsConsole := True;
+  SysInitStdIO;
+  {$endif}
   {$endif}
   with TSynLogTestLog.Family do begin
     Level := withLogs;
