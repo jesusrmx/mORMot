@@ -1,6 +1,8 @@
 /// SynFile server handling
 unit FileServer;
 
+{$MODE Delphi}
+
 interface
 
 {$I Synopse.inc} // define HASINLINE USETYPEINFO CPU32 CPU64 OWNNORMTOUPPER
@@ -11,7 +13,7 @@ uses
   SynCommons,
   SynTable,
   mORMot,
-  mORMoti18n,
+  //mORMoti18n,
   mORMotHttpServer,
   mORMotSQLite3,
   SynSQLite3Static,

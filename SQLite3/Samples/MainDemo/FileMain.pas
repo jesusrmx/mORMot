@@ -1,6 +1,8 @@
 /// SynFile main Window
 unit FileMain;
 
+{$MODE Delphi}
+
 interface
 
 {$define DEBUGINTERNALSERVER}
@@ -9,13 +11,14 @@ interface
 // must be set globally for the whole application
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
 {$ifdef USETMSPACK}
   AdvToolBar, AdvPreviewMenu, AdvShapeButton, AdvOfficePager,
 {$endif}
-  ImgList, ShellApi,
+  ImgList,
   SynCommons, SynTable, SynGdiPlus, mORMot, mORMotHttpClient,
-  mORMotToolBar, mORMotUI, mORMotUILogin, mORMoti18n,
+  mORMotToolBar, mORMotUI, mORMotUILogin,
+  //,mORMoti18n
 {$ifdef DEBUGINTERNALSERVER}
   FileServer,
 {$endif}
@@ -59,9 +62,9 @@ var
 
 implementation
 
-{$R *.dfm}
+{$R *.lfm}
 
-{$R FileMain.res}
+{$R FileMain.rc}
 
 procedure TMainForm.ActionClick(Sender: TObject;
   RecordClass: TSQLRecordClass; ActionValue: integer);
@@ -188,7 +191,7 @@ begin
           if Save(U2S(TSQLFile(Tab.CurrentRecord).fName)) then
             if FileFromString(fData,FN) then begin
               Client.AddAuditTrail(feRecordExported,Tab.CurrentRecord);
-              ShellExecute(Handle,nil,pointer(FN),nil,nil,SW_SHOWNORMAL);
+               OpenDocument(FN); { *Converted from ShellExecute* }
             end;
      faDelete:
      with Tab.TableToGrid do begin

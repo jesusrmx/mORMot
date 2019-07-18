@@ -1,16 +1,19 @@
 /// SynFile Edit window
 unit FileEdit;
 
+{$MODE Delphi}
+
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ExtCtrls, ExtDlgs,
 {$ifdef USETMSPACK}
   TaskDialog,
 {$endif}
   SynCommons, SynCrypto, SynGdiPlus, SynTaskDialog,
-  mORMot, mORMotUILogin, mORMotUI, mORMoti18n,
+  mORMot, mORMotUILogin, mORMotUI,
+  //mORMoti18n,
   FileTables;
 
 type
@@ -56,7 +59,14 @@ function Cypher(const Title: string; var Content: TSQLRawBlob; Encrypt: boolean)
 
 implementation
 
-{$R *.dfm}
+{$R *.lfm}
+
+{$ifdef FPC}
+function _(s:string):string;
+begin
+  result := s;
+end;
+{$endif}
 
 { TEditForm }
 
@@ -89,10 +99,11 @@ begin
   result := true;
 end;
 
-
-procedure TEditForm.FormCreate(Sender: TObject);
 resourcestring
   BtnPictureHint = 'Change the Picture associated with this record';
+  sEnterPassword = 'Enter password for this record:';
+
+procedure TEditForm.FormCreate(Sender: TObject);
 begin
   BtnOK := TSynButton.CreateKind(self,cbOK,337,437,100,41);
   BtnOK.ModalResult := mrNone;
@@ -140,8 +151,6 @@ begin
 end;
 
 function Cypher(const Title: string; var Content: TSQLRawBlob; Encrypt: boolean): boolean;
-resourcestring
-  sEnterPassword = 'Enter password for this record:';
 var AES: TAESFull;
     SHA: TSHA256Digest;
     PassWord: string;

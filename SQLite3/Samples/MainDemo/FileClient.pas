@@ -1,12 +1,14 @@
 /// SynFile client handling
 unit FileClient;
 
+{$MODE Delphi}
+
 interface
 
 {$I Synopse.inc} // define HASINLINE USETYPEINFO CPU32 CPU64 OWNNORMTOUPPER
 
 uses
-  Windows,
+  LCLIntf, LCLType, LMessages,
   SysUtils,
   Classes,
   Graphics,
@@ -14,7 +16,7 @@ uses
   SynGdiPlus,
   mORMot,
   mORMotHttpClient,
-  mORMoti18n,
+  //mORMoti18n,
   mORMotToolBar,
   mORMotReport,
   FileTables;
@@ -45,6 +47,13 @@ implementation
 
 uses Forms;
 
+{$ifdef FPC}
+function iso2S(const t: TTimelog): string;
+begin
+  result := PTimeLogBits(@t)^.i18nText;
+end;
+
+{$endif}
 
 { TFileClient }
 

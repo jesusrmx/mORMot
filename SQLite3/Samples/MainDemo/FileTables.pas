@@ -1,6 +1,8 @@
 /// SynFile ORM definitions shared by both client and server
 unit FileTables;
 
+{$MODE Delphi}
+
 interface
 
 {$I Synopse.inc} // define HASINLINE USETYPEINFO CPU32 CPU64 OWNNORMTOUPPER
@@ -11,8 +13,9 @@ uses
   SynCommons,
   SynCrypto,
   SynZip,
-  mORMot,
-  mORMoti18n;
+  mORMot
+  //,mORMoti18n
+  ;
 
 type
   /// the internal events/states, as used by the TSQLAuditTrail table
