@@ -1,0 +1,13 @@
+**/blob/*
+*.settings
+*.json
+*.fdb*
+*.data
+*.ini
+*.htm*
+*.db*
+*.js
+*.config
+*.history
+*.stats
+*.pdf
