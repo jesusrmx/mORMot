@@ -1,5 +1,7 @@
 unit MAinFormU;
 
+{$MODE Delphi}
+
 interface
 
 {*****************************************}
@@ -14,11 +16,13 @@ interface
 {*****************************************}
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.DBCtrls, Data.DB,
-  Vcl.Grids, Vcl.DBGrids, JvExDBGrids, JvDBGrid, JvDBUltimGrid,
-  Datasnap.DBClient, Vcl.StdCtrls, Vcl.Buttons, Vcl.Menus, Vcl.ComCtrls,
-  JvExExtCtrls, JvExtComponent, JvCaptionPanel, JvExControls, JvDBLookup;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
+  Vcl.ExtCtrls, Vcl.DBCtrls, Data.DB, Vcl.Grids, Vcl.DBGrids, JvExDBGrids,
+  JvDBGrid, JvDBUltimGrid, Datasnap.DBClient, Vcl.StdCtrls, Vcl.Buttons,
+  Vcl.Menus, Vcl.ComCtrls, JvExExtCtrls, JvExtComponent, JvCaptionPanel,
+  JvExControls, JvDBLookup, ComCtrls, ExtCtrls, DBCtrls, StdCtrls, Buttons,
+  Menus, DB;
 
 type
   TMainForm = class(TForm)
@@ -85,7 +89,7 @@ var
 
 implementation
 
-{$R *.dfm}
+{$R *.lfm}
 
 uses idGlobal;
 
